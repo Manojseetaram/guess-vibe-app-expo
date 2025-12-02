@@ -5,20 +5,23 @@ import { useRouter } from "expo-router";
 
 export default function Signup() {
   const router = useRouter();
-  const [image, setImage] = useState(null);
+const [image, setImage] = useState<string | null>(null);
 
   // Pick Profile Image
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
+const pickImage = async () => {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    quality: 1,
+  });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  console.log(result); // <-- Debug what you actually get
+
+  if (!result.canceled && result.assets && result.assets.length > 0) {
+    setImage(result.assets[0].uri);
+  }
+};
+
 
   return (
     <View style={styles.container}>

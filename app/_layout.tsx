@@ -24,6 +24,20 @@ export default function Layout() {
             headerShown: false, // completely removes header + back arrow
           }}
         />
+        <Stack.Screen
+  name="settings"
+  options={{
+    headerShown: true,
+    title: "",                 // ❌ NO TITLE
+    headerTransparent: false,
+    headerStyle: {
+      backgroundColor:"rgba(5, 12, 30, 0.98)", // ⭐ SAME BG COLOR
+    },
+    headerTintColor: "#fff",
+        // ⭐ ARROW WHITE COLOR
+  }}
+/>
+
 
       </Stack>
     </SoundProvider>

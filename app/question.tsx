@@ -358,10 +358,10 @@ const GUESSES = [
    --------------------------- */
 const getGenieImage = (index: number) => {
   const percent = (index / QUESTIONS.length) * 100;
-  if (percent < 25) return require("../assets/images/react-logo.png");
-  if (percent < 50) return require("../assets/images/android-icon-foreground.png");
-  if (percent < 75) return require("../assets/images/splash-icon.png");
-  return require("../assets/images/partial-react-logo.png");
+  if (percent < 25) return require("../assets/images/iamge1.png");
+  if (percent < 50) return require("../assets/images/iamge2.png");
+  if (percent < 75) return require("../assets/images/iamge3.png");
+  return require("../assets/images/iamge4.png");
 };
 
 /* ---------------------------
@@ -509,12 +509,7 @@ export default function QuestionPage() {
       </Animated.View>
 
       {/* PROGRESS BAR */}
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBackground}>
-          <Animated.View style={[styles.progressFill, { width: `${progress}%` }]} />
-        </View>
-        <Text style={styles.progressText}>{progress}%</Text>
-      </View>
+
 
       {/* QUESTION */}
       <View style={styles.questionBox}>
@@ -529,6 +524,12 @@ export default function QuestionPage() {
           <Text style={{ color: "#fff", marginTop: 10 }}>Thinking...</Text>
         </View>
       )}
+            <View style={styles.progressContainer}>
+        <View style={styles.progressBackground}>
+          <Animated.View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
+        <Text style={styles.progressText}>{progress}%</Text>
+      </View>
 
       {/* OPTIONS */}
       <View style={styles.optionsContainer}>

@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Video } from "expo-av";
+import { ResizeMode } from 'expo-av';
+
 
 const { width } = Dimensions.get("window");
-
-
 
 export default function NextScreen() {
   const flatListRef = useRef(null);
@@ -25,36 +25,30 @@ export default function NextScreen() {
       <Video
         source={require("../assets/video/GIF_Request_with_Minimal_Animation.mp4")} 
         style={styles.video}
-        resizeMode="cover"
+        resizeMode={ResizeMode.COVER}
+
         shouldPlay
         isLooping
-        isMuted={false} // if you want sound → change to false
+        isMuted={false}
       />
 
-      {/* 🔥 ALL CONTENT ABOVE VIDEO */}
       <View style={styles.overlay}>
-        {/* HEADER */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.push("/settings")}>
-            <Text style={styles.icon}>
-                <Image
-                        source={require("../assets/images/gear.png")} // ✅ just logo
-                        style={styles.logo}
-                        resizeMode="contain"
-                      />
-            </Text>
+            <Image
+              source={require("../assets/images/setting.png")}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
 
-        
-
           <TouchableOpacity onPress={() => router.push("/profile")}>
-            <Text style={styles.icon}>👤</Text>
+            <Image
+              source={require("../assets/images/user.png")}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
 
-     
-
-        {/* START BUTTON → bottom */}
         <TouchableOpacity
           style={styles.startBtn}
           onPress={() => router.push("/question")}
@@ -66,28 +60,23 @@ export default function NextScreen() {
   );
 }
 
-// ---------------------------
-//     STYLES
-// ---------------------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
   },
 
-  // BACKGROUND VIDEO
   video: {
     ...StyleSheet.absoluteFillObject,
+    opacity: 0.4, // 🔥 ADD THIS
   },
 
-  // CONTENT OVER VIDEO
   overlay: {
     flex: 1,
     alignItems: "center",
     paddingTop: 40,
   },
 
-  // HEADER
   header: {
     width: "90%",
     flexDirection: "row",
@@ -95,35 +84,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  icon: {
-    fontSize: 26,
-    color: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "white",
-  },
 
-  // SLIDER
-  sliderBox: {
-    width: "90%",
-    height: 320,
-    backgroundColor: "rgba(255,255,255,0.25)",
-    borderRadius: 20,
-    overflow: "hidden",
-    marginBottom: 40,
-  },
-  slideImage: {
-    width: width * 0.9,
-    height: 320,
-    resizeMode: "cover",
-  },
-
-  // START BUTTON AT BOTTOM
   startBtn: {
     position: "absolute",
-    bottom: 40, // <-- moved to bottom
+    bottom: 40,
     backgroundColor: "rgba(115, 117, 184, 0.8)",
     paddingVertical: 12,
     paddingHorizontal: 50,
@@ -132,6 +96,6 @@ const styles = StyleSheet.create({
   startText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#ffff",
+    color: "#fff",
   },
 });

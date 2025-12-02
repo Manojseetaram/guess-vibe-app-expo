@@ -24,9 +24,33 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", paddingTop: 50, paddingHorizontal: 20 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 40 },
-  title: { fontSize: 22, fontWeight: "700" },
-  item: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 18, borderBottomWidth: 1, borderColor: "#eee" },
-  itemText: { fontSize: 18, fontWeight: "600" },
+  container: {
+    flex: 1,
+    backgroundColor: "rgba(5, 12, 30, 0.98)", // ⭐ YOUR COLOR
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#fff", // optional: looks better on dark background
+  },
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  itemText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fff", // optional
+  },
 });

@@ -15,17 +15,19 @@ export default function Profile() {
   const [photo, setPhoto] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+const [image, setImage] = useState<string | null>(null);
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    quality: 1,
+  });
 
-    if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
-    }
-  };
+  if (!result.canceled && result.assets && result.assets.length > 0) {
+    setImage(result.assets[0].uri);  // ✅ No more error
+  }
+};
+
 
   return (
     <View style={styles.container}>
@@ -63,7 +65,7 @@ export default function Profile() {
 
       {/* Sign Up link */}
       <TouchableOpacity onPress={() => router.push("/signup")}>
-        <Text style={styles.link}>Don't have an account? Sign Up</Text>
+        <Text style={styles.link}>Dont have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
