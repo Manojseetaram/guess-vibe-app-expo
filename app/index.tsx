@@ -1,43 +1,45 @@
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, BackHandler, Platform } from "react-native";
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowPopup(true); // Show pop-up after 1 second
+      setShowPopup(true);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
+  const handleDontAllow = () => {
+    if (Platform.OS === "android") {
+      BackHandler.exitApp(); // ✅ CLOSE APP
+    } else {
+      // ❗ iOS cannot force close app
+      setShowPopup(false); // close popup instead
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* TOP TITLE */}
       <Text style={styles.title}>SIXTH SENSE</Text>
 
-      {/* POPUP CARD */}
       {showPopup && (
         <View style={styles.popupCard}>
-          {/* Icon */}
           <Text style={styles.icon}>🔔</Text>
 
-          {/* Message */}
-          <Text style={styles.msg}>
-            Allow Guessvibe to send you notifications?
-          </Text>
+          <Text style={styles.msg}>Allow Guessvibe to send you notifications?</Text>
 
           <TouchableOpacity
-  style={styles.allowBtn}
-  onPress={() => router.push("/next")}   // 👈 go to next page
->
-  <Text style={styles.allowText}>Allow</Text>
-</TouchableOpacity>
+            style={styles.allowBtn}
+            onPress={() => router.push("/next")}
+          >
+            <Text style={styles.allowText}>Allow</Text>
+          </TouchableOpacity>
 
-          {/* Don't allow */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleDontAllow}>
             <Text style={styles.denyText}>Dont allow</Text>
           </TouchableOpacity>
         </View>
@@ -65,7 +67,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   icon: {
     fontSize: 40,
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginBottom: 18,
-    color: "#444",
   },
   allowBtn: {
     backgroundColor: "#007bff",

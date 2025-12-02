@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -7,7 +8,9 @@ export default function Question() {
       
       {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.icon}>⚙️</Text>
+        <TouchableOpacity onPress={() => router.push("/settings")}>
+          <Text style={styles.icon}>⚙️</Text>
+        </TouchableOpacity>
         <Text style={styles.icon}>🏠</Text>
       </View>
 
