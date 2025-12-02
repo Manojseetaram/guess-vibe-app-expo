@@ -36,7 +36,13 @@ export default function NextScreen() {
         {/* HEADER */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.push("/settings")}>
-            <Text style={styles.icon}>⚙️</Text>
+            <Text style={styles.icon}>
+                <Image
+                        source={require("../assets/images/gear.png")} // ✅ just logo
+                        style={styles.logo}
+                        resizeMode="contain"
+                      />
+            </Text>
           </TouchableOpacity>
 
         
