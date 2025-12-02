@@ -55,9 +55,15 @@ export default function NextScreen() {
       </View>
 
       {/* START Button */}
-      <TouchableOpacity style={styles.startBtn}>
-        <Text style={styles.startText}>START</Text>
-      </TouchableOpacity>
+     <TouchableOpacity
+  style={styles.startBtn}
+  onPress={() => {
+    console.log("START CLICKED");
+    router.push("/question"); // 👈 open next page
+  }}
+>
+  <Text style={styles.startText}>START</Text>
+</TouchableOpacity>
     </View>
   );
 }
