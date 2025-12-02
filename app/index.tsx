@@ -15,7 +15,7 @@ import {
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
-  const slideAnim = useRef(new Animated.Value(300)).current; // Slide from bottom
+  const slideAnim = useRef(new Animated.Value(200)).current; // Slide from bottom
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,7 +28,7 @@ export default function Home() {
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
       }).start();
-    }, 1000);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, []);
