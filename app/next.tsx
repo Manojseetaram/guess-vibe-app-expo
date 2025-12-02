@@ -33,9 +33,10 @@ export default function NextScreen() {
 
         <Text style={styles.title}>SIXTH SErurhrjrjrjrNSE</Text>
 
-        <TouchableOpacity>
-          <Text style={styles.icon}>👤</Text>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/profile")}>
+  <Text style={styles.icon}>👤</Text>
+</TouchableOpacity>
+
       </View>
 
       {/* SLIDER */}
