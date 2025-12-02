@@ -1,4 +1,3 @@
-// app/next.tsx
 import React, { useRef } from "react";
 import {
   View,
@@ -10,14 +9,11 @@ import {
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { Video } from "expo-av";
 
 const { width } = Dimensions.get("window");
 
-const images = [
-  require("../assets/images/icon.png"),
-  require("../assets/images/android-icon-background.png"),
-  require("../assets/images/android-icon-background.png"),
-];
+
 
 export default function NextScreen() {
   const flatListRef = useRef(null);
@@ -25,53 +21,62 @@ export default function NextScreen() {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-      <TouchableOpacity onPress={() => router.push("/settings")}>
-  <Text style={styles.icon}>⚙️</Text>
-</TouchableOpacity>
+  
+      <Video
+        source={require("../assets/video/GIF_Request_with_Minimal_Animation.mp4")} 
+        style={styles.video}
+        resizeMode="cover"
+        shouldPlay
+        isLooping
+        isMuted={false} // if you want sound → change to false
+      />
 
-        <Text style={styles.title}>SIXTH SErurhrjrjrjrNSE</Text>
+      {/* 🔥 ALL CONTENT ABOVE VIDEO */}
+      <View style={styles.overlay}>
+        {/* HEADER */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.push("/settings")}>
+            <Text style={styles.icon}>⚙️</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/profile")}>
-  <Text style={styles.icon}>👤</Text>
-</TouchableOpacity>
+        
 
+          <TouchableOpacity onPress={() => router.push("/profile")}>
+            <Text style={styles.icon}>👤</Text>
+          </TouchableOpacity>
+        </View>
+
+     
+
+        {/* START BUTTON → bottom */}
+        <TouchableOpacity
+          style={styles.startBtn}
+          onPress={() => router.push("/question")}
+        >
+          <Text style={styles.startText}>START</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* SLIDER */}
-      <View style={styles.sliderBox}>
-        <FlatList
-          ref={flatListRef}
-          data={images}
-          keyExtractor={(_, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <Image source={item} style={styles.slideImage} />
-          )}
-        />
-      </View>
-
-      {/* START Button */}
-     <TouchableOpacity
-  style={styles.startBtn}
-  onPress={() => {
-    console.log("START CLICKED");
-    router.push("/question"); // 👈 open next page
-  }}
->
-  <Text style={styles.startText}>START</Text>
-</TouchableOpacity>
     </View>
   );
 }
 
+// ---------------------------
+//     STYLES
+// ---------------------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
+  },
+
+  // BACKGROUND VIDEO
+  video: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  // CONTENT OVER VIDEO
+  overlay: {
+    flex: 1,
     alignItems: "center",
     paddingTop: 40,
   },
@@ -86,17 +91,19 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 26,
+    color: "#fff",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
+    color: "white",
   },
 
   // SLIDER
   sliderBox: {
     width: "90%",
     height: 320,
-    backgroundColor: "#ddd",
+    backgroundColor: "rgba(255,255,255,0.25)",
     borderRadius: 20,
     overflow: "hidden",
     marginBottom: 40,
@@ -107,15 +114,18 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
 
-  // BUTTON
+  // START BUTTON AT BOTTOM
   startBtn: {
-    backgroundColor: "#ddd",
+    position: "absolute",
+    bottom: 40, // <-- moved to bottom
+    backgroundColor: "rgba(115, 117, 184, 0.8)",
     paddingVertical: 12,
     paddingHorizontal: 50,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   startText: {
     fontSize: 20,
     fontWeight: "700",
+    color: "#ffff",
   },
 });

@@ -26,7 +26,7 @@ export function SoundProvider({ children }) {
 
   async function loadSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../assets/music/WhatsApp Audio 2025-12-02 at 19.22.49.mpeg"), // YOUR MUSIC FILE
+      require("../../assets/music/tap.mp3"),
       { isLooping: true }
     );
     setBgSound(sound);

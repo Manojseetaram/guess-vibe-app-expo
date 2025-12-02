@@ -1,6 +1,5 @@
-// app/splash.tsx
 import { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Splash() {
@@ -8,7 +7,7 @@ export default function Splash() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/");  // Navigate to home (index.tsx)
+      router.replace("/"); // navigate to main page
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -16,7 +15,11 @@ export default function Splash() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Splash Screen 🎉</Text>
+      <Image
+        source={require("../assets/images/logo.png")} // ✅ just logo
+        style={styles.logo}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -24,12 +27,12 @@ export default function Splash() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    justifyContent: "center", // center vertically
+    alignItems: "center",     // center horizontally
+    backgroundColor: "#fff",  // simple white background
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
+  logo: {
+    width: 180,   // change size as you like
+    height: 180,
   },
 });

@@ -396,7 +396,7 @@ export default function QuestionPage() {
   async function playTapSound() {
   try {
     const { sound } = await Audio.Sound.createAsync(
-      require("../assets/music/WhatsApp Audio 2025-12-02 at 19.22.49.mpeg")
+      require("../assets/music/tap.mp3")
     );
 
     await sound.playAsync();

@@ -5,14 +5,27 @@ import { SoundProvider } from "./context/SoundContext";
 
 export default function Layout() {
   return (
-        <SoundProvider>
+    <SoundProvider>
+      <Stack initialRouteName="splash">
 
-    <Stack initialRouteName="splash">
-      <Stack.Screen name="splash" options={{ headerShown: false }} />
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
-        </SoundProvider>
+        {/* Splash screen */}
+        <Stack.Screen name="splash" options={{ headerShown: false }} />
 
+        {/* Home */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+
+        {/* Tabs */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+        {/* Next screen - NO HEADER, NO ARROW */}
+        <Stack.Screen
+          name="next"
+          options={{
+            headerShown: false, // completely removes header + back arrow
+          }}
+        />
+
+      </Stack>
+    </SoundProvider>
   );
 }
