@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",  
   },
   logo: {
-    width: 280,   // change size as you like
-    height: 220,
+    width: 380,   // change size as you like
+    height: 320,
   },
 });

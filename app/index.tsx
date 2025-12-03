@@ -155,7 +155,7 @@ smallText: {
 
   popupCard: {
   position: "absolute",
-  top: "32%",
+  top: "52%",
   alignSelf: "center",
   width: "75%",            // smaller popup
   padding: 18,

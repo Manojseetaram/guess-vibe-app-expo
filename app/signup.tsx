@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
@@ -14,6 +15,13 @@ import { useRouter } from "expo-router";
 export default function Signup() {
   const router = useRouter();
   const [image, setImage] = useState<string | null>(null);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // ⛓️ DIRECT API URL (NO .env)
+  const API_BASE_URL = "https://unfearingly-heterozygous-brittny.ngrok-free.dev";
 
   // Pick Profile Image
   const pickImage = async () => {
@@ -28,9 +36,44 @@ export default function Signup() {
     }
   };
 
+  const handleSignup = async () => {
+    if (!name || !email || !password) {
+      Alert.alert("Error", "Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("SERVER RESPONSE:", data);
+
+      if (!response.ok) {
+        Alert.alert("Error", data.message || "Something went wrong");
+        return;
+      }
+
+      Alert.alert("Success", "Account created!");
+      router.replace("/next");
+    } catch (error) {
+      console.log("Signup Error:", error);
+      Alert.alert("Network Error", "Cannot reach server. Check ngrok or internet.");
+    }
+  };
+
   return (
     <ImageBackground
-      source={require("../assets/images/bg.png")}  // SAME background as profile
+      source={require("../assets/images/bg.png")}
       style={styles.background}
       resizeMode="cover"
     >
@@ -47,31 +90,42 @@ export default function Signup() {
         )}
       </TouchableOpacity>
 
-      {/* INPUTS */}
-      <TextInput style={styles.input} placeholder="Enter your Name" placeholderTextColor="#333" />
-      <TextInput style={styles.input} placeholder="Enter your Email" placeholderTextColor="#333" />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your Name"
+        placeholderTextColor="#333"
+        value={name}
+        onChangeText={setName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your Email"
+        placeholderTextColor="#333"
+        value={email}
+        onChangeText={setEmail}
+      />
+
       <TextInput
         style={styles.input}
         placeholder="Enter Password"
         placeholderTextColor="#333"
         secureTextEntry
+        value={password}
+        onChangeText={setPassword}
       />
 
-      {/* SIGN UP BUTTON */}
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => router.replace("/next")}
-      >
+      <TouchableOpacity style={styles.btn} onPress={handleSignup}>
         <Text style={styles.btnText}>SIGN UP</Text>
       </TouchableOpacity>
 
-      {/* BACK */}
       <TouchableOpacity onPress={() => router.back()}>
         <Text style={styles.link}>Already have an account? Sign In</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
 }
+
 
 const styles = StyleSheet.create({
   background: {

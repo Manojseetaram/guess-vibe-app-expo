@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
+
+const API_URL = "https://unfearingly-heterozygous-brittny.ngrok-free.dev";  // 🔥 DIRECT BACKEND
 
 export default function Profile() {
   const router = useRouter();
@@ -29,9 +32,49 @@ export default function Profile() {
     }
   };
 
+  // ------------------------------------
+  //    LOGIN FUNCTION (BACKEND CONNECT)
+  // ------------------------------------
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter email & password");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        Alert.alert("Login Failed", data.message || "Invalid credentials");
+        return;
+      }
+
+      Alert.alert("Success", "Logged in successfully!");
+
+      // Navigate to next screen
+      router.replace("/next");
+
+    } catch (err) {
+      console.log("Login Error:", err);
+      Alert.alert(
+        "Network Error",
+        "Cannot reach server. Check ngrok tunnel or internet."
+      );
+    }
+  };
+
   return (
     <ImageBackground
-      source={require("../assets/images/bg.png")}   // <-- background image
+      source={require("../assets/images/bg.png")}
       style={styles.background}
       resizeMode="cover"
     >
@@ -62,12 +105,13 @@ export default function Profile() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.btn}>
+      {/* LOGIN BUTTON */}
+      <TouchableOpacity style={styles.btn} onPress={handleLogin}>
         <Text style={styles.btnText}>SIGN IN</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/signup")}>
-        <Text style={styles.link}>Don't have an account? Sign Up</Text>
+        <Text style={styles.link}>Dont have an account? Sign Up</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
@@ -114,21 +158,18 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   btn: {
-   backgroundColor: "#142131",
-    borderWidth : 1,
+    backgroundColor: "#142131",
+    borderWidth: 1,
     paddingVertical: 15,
     borderRadius: 10,
     marginTop: 20,
-     borderColor: "rgba(255,255,255,0.15)",
+    borderColor: "rgba(255,255,255,0.15)",
   },
   btnText: {
     color: "#fff",
     textAlign: "center",
     fontSize: 18,
     fontWeight: "700",
-    alignItems: "center",
- 
- 
   },
   link: {
     marginTop: 20,
