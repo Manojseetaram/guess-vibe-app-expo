@@ -135,14 +135,14 @@ bottomButton: {
 
 bigText: {
   color: "white",
-  fontFamily : "Rajdhani_700Bold",
-  fontSize: 20,       // BIG text
+ fontFamily: "Anton_400Regular",
+  fontSize: 20,       
   fontWeight: "800",
 },
 
 smallText: {
   color: "white",
-  fontSize: 14,       // SMALL text
+  fontSize: 14,      
   fontWeight: "400",
   marginTop: 2,
 },
@@ -152,7 +152,7 @@ smallText: {
     fontSize: 18,
     fontWeight: "700",
   },
-  
+
   popupCard: {
   position: "absolute",
   top: "32%",

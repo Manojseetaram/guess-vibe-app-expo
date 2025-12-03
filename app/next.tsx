@@ -42,10 +42,10 @@ export default function NextScreen() {
       <Image
         source={
           soundEnabled
-            ? require("../assets/images/volume.png")  // ON
-            : require("../assets/images/mute.png")    // OFF
+            ? require("../assets/images/volume.png") 
+            : require("../assets/images/mute.png")   
         }
-        style={{ width: 40, height: 40 }}
+        style={{ width: 32, height: 32 }}
       />
     </TouchableOpacity>
 
@@ -109,7 +109,8 @@ video: {
   },
   startText: {
     fontSize: 20,
-    fontWeight: "700",
+  
+    fontFamily: "Rajdhani_700Bold",
     color: "#ffff",
   },
 });

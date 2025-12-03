@@ -242,13 +242,8 @@ export default function QuestionPage() {
         <Text style={styles.questionText}>{QUESTIONS[index].text}</Text>
       </ImageBackground>
 
-      {/* LOADING */}
-      {loading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#fff" />
-          <Text style={{ color: "#fff", marginTop: 10 }}>Thinking...</Text>
-        </View>
-      )}
+      
+    
 
      
 
@@ -439,13 +434,13 @@ gradientFill: {
   questionNumber: { fontSize: 14, color: "#666", marginBottom: 6 },
   questionText: { fontSize: 20, textAlign: "center", color: "white" },
 
-  loadingOverlay: {
-    position: "absolute",
-    top: "44%",
-    left: 0,
-    right: 0,
-    alignItems: "center",
-  },
+  // loadingOverlay: {
+  //   position: "absolute",
+  //   top: "44%",
+  //   left: 0,
+  //   right: 0,
+  //   alignItems: "center",
+  // },
 
   optionsContainer: {  width: "100%", alignItems: "center" , },
   row: { flexDirection: "row", width: "100%" , margin : 0 , padding : 0   },
