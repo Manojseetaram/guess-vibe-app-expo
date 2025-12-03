@@ -11,11 +11,13 @@ import {
 import { useRouter } from "expo-router";
 import { Video } from "expo-av";
 import { ResizeMode } from 'expo-av';
+import { useSound } from "./context/SoundContext";
 
 
 const { width } = Dimensions.get("window");
 
 export default function NextScreen() {
+  const { soundEnabled, setSoundEnabled } = useSound();
   const flatListRef = useRef(null);
   const router = useRouter();
 
@@ -23,7 +25,7 @@ export default function NextScreen() {
     <View style={styles.container}>
   
       <Video
-        source={require("../assets/video/GIF_Request_with_Minimal_Animation.mp4")} 
+        source={require("../assets/video/Static_Video_Effects_Loop.mp4")} 
         style={styles.video}
         resizeMode={ResizeMode.COVER}
 
@@ -34,12 +36,18 @@ export default function NextScreen() {
 
       <View style={styles.overlay}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push("/settings")}>
-            <Image
-              source={require("../assets/images/setting.png")}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          <TouchableOpacity
+      onPress={() => setSoundEnabled(!soundEnabled)}
+    >
+      <Image
+        source={
+          soundEnabled
+            ? require("../assets/images/volume.png")  // ON
+            : require("../assets/images/mute.png")    // OFF
+        }
+        style={{ width: 40, height: 40 }}
+      />
+    </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push("/profile")}>
             <Image
@@ -66,10 +74,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
 
-  video: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.4, // 🔥 ADD THIS
-  },
+video: {
+  ...StyleSheet.absoluteFillObject,
+  width: "100%",
+  height: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+  opacity: 0.8,
+},
+
 
   overlay: {
     flex: 1,
@@ -87,8 +100,8 @@ const styles = StyleSheet.create({
 
   startBtn: {
     position: "absolute",
-    bottom: 40,
-    backgroundColor: "rgba(115, 117, 184, 0.8)",
+    bottom: 60,
+    backgroundColor: "#FFF",
     paddingVertical: 12,
     paddingHorizontal: 50,
     borderRadius: 10,
@@ -96,6 +109,6 @@ const styles = StyleSheet.create({
   startText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#fff",
+    color: "#142131",
   },
 });

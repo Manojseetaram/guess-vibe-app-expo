@@ -24,21 +24,47 @@ export default function Layout() {
             headerShown: false, // completely removes header + back arrow
           }}
         />
-        <Stack.Screen
-  name="settings"
+  
+
+  <Stack.Screen
+  name="question"
   options={{
     headerShown: true,
-    title: "",                 // ❌ NO TITLE
-    headerTransparent: false,
-    headerStyle: {
-      backgroundColor:"rgba(5, 12, 30, 0.98)", // ⭐ SAME BG COLOR
-    },
+    title: "",                 
+    headerTransparent: true,
+    // headerStyle: {
+    //   backgroundColor:"rgba(5, 12, 30, 0.98)", // ⭐ SAME BG COLOR
+    // },
     headerTintColor: "#fff",
         // ⭐ ARROW WHITE COLOR
   }}
 />
-
-
+<Stack.Screen
+  name="profile"
+  options={{
+    headerShown: true,
+    title: "",                 
+    headerTransparent: true,
+    // headerStyle: {
+    //   backgroundColor:"rgba(5, 12, 30, 0.98)", // ⭐ SAME BG COLOR
+    // },
+    headerTintColor: "#fff",
+        // ⭐ ARROW WHITE COLOR
+  }}
+/>
+<Stack.Screen
+  name="signup"
+  options={{
+    headerShown: true,
+    title: "",                 
+    headerTransparent: true,
+    // headerStyle: {
+    //   backgroundColor:"rgba(5, 12, 30, 0.98)", // ⭐ SAME BG COLOR
+    // },
+    headerTintColor: "#fff",
+        // ⭐ ARROW WHITE COLOR
+  }}
+/>
       </Stack>
     </SoundProvider>
   );

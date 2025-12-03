@@ -1,117 +1,136 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 
 export default function Signup() {
   const router = useRouter();
-const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
 
   // Pick Profile Image
-const pickImage = async () => {
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    quality: 1,
-  });
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
 
-  console.log(result); // <-- Debug what you actually get
-
-  if (!result.canceled && result.assets && result.assets.length > 0) {
-    setImage(result.assets[0].uri);
-  }
-};
-
+    if (!result.canceled && result.assets?.length > 0) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require("../assets/images/bg.png")}  // SAME background as profile
+      style={styles.background}
+      resizeMode="cover"
+    >
       <Text style={styles.title}>Create Account</Text>
 
       {/* Profile Photo */}
       <TouchableOpacity onPress={pickImage}>
-        <View style={styles.imageBox}>
-          {image ? (
-            <Image source={{ uri: image }} style={styles.profileImage} />
-          ) : (
-            <Text style={{ color: "#777" }}>Add Profile Photo</Text>
-          )}
-        </View>
+        {image ? (
+          <Image source={{ uri: image }} style={styles.profilePic} />
+        ) : (
+          <View style={styles.uploadBox}>
+            <Text style={styles.uploadText}>Add Profile Photo</Text>
+          </View>
+        )}
       </TouchableOpacity>
 
       {/* INPUTS */}
-      <TextInput style={styles.input} placeholder="Enter your Name" />
-      <TextInput style={styles.input} placeholder="Enter your Email" />
-      <TextInput style={styles.input} placeholder="Enter Password" secureTextEntry />
+      <TextInput style={styles.input} placeholder="Enter your Name" placeholderTextColor="#333" />
+      <TextInput style={styles.input} placeholder="Enter your Email" placeholderTextColor="#333" />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Password"
+        placeholderTextColor="#333"
+        secureTextEntry
+      />
 
       {/* SIGN UP BUTTON */}
       <TouchableOpacity
-        style={styles.signupBtn}
-        onPress={() => {
-          // After sign up -> go DIRECT to next.tsx
-          router.replace("/next");
-        }}
+        style={styles.btn}
+        onPress={() => router.replace("/next")}
       >
-        <Text style={styles.signupText}>SIGN UP</Text>
+        <Text style={styles.btnText}>SIGN UP</Text>
       </TouchableOpacity>
 
       {/* BACK */}
       <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.backText}>Back</Text>
+        <Text style={styles.link}>Already have an account? Sign In</Text>
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     paddingTop: 70,
-    alignItems: "center",
-    backgroundColor: "#fff",
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 26,
     fontWeight: "700",
-    marginBottom: 20,
+    marginBottom: 30,
+    textAlign: "center",
+    color: "#fff",
   },
-  imageBox: {
-    width: 110,
-    height: 110,
-    borderRadius: 100,
-    borderWidth: 2,
-    borderColor: "#ccc",
+  uploadBox: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "rgba(255,255,255,0.6)",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     marginBottom: 20,
-    overflow: "hidden",
   },
-  profileImage: {
-    width: "100%",
-    height: "100%",
+  uploadText: {
+    fontSize: 12,
+    color: "#333",
+  },
+  profilePic: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    alignSelf: "center",
+    marginBottom: 20,
   },
   input: {
-    width: "85%",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  btn: {
+    backgroundColor: "#142131",
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    marginVertical: 8,
-  },
-  signupBtn: {
-    backgroundColor: "#000",
-    paddingVertical: 12,
-    paddingHorizontal: 60,
-    borderRadius: 8,
+    paddingVertical: 15,
+    borderRadius: 10,
     marginTop: 20,
+    borderColor: "rgba(255,255,255,0.15)",
   },
-  signupText: {
+  btnText: {
     color: "#fff",
+    textAlign: "center",
     fontSize: 18,
     fontWeight: "700",
   },
-  backText: {
-    marginTop: 25,
-    color: "#444",
+  link: {
+    marginTop: 20,
+    textAlign: "center",
+    color: "#fff",
     fontSize: 16,
   },
 });

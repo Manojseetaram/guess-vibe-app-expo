@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // center vertically
     alignItems: "center",     // center horizontally
-    backgroundColor: "#fff",  // simple white background
+    backgroundColor: "#fff",  
   },
   logo: {
-    width: 180,   // change size as you like
-    height: 180,
+    width: 280,   // change size as you like
+    height: 220,
   },
 });

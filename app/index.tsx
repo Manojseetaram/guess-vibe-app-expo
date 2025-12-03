@@ -15,30 +15,30 @@ import {
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
-  const slideAnim = useRef(new Animated.Value(200)).current; // Slide from bottom
+  const slideAnim = useRef(new Animated.Value(200)).current;
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(true);
 
-      // Slide up animation
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 400,
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
       }).start();
-    }, 4000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);
 
-  const handleDontAllow = () => {
-    if (Platform.OS === "android") {
-      BackHandler.exitApp();
-    } else {
-      setShowPopup(false);
-    }
+  const closePopup = () => {
+    Animated.timing(slideAnim, {
+      toValue: 200,
+      duration: 350,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => setShowPopup(false));
   };
 
   return (
@@ -47,41 +47,55 @@ export default function Home() {
       style={styles.bg}
       resizeMode="cover"
     >
-      {/* Overlay */}
       <View style={styles.overlay} />
 
-      {/* Animated Popup */}
-      {showPopup && (
-        <Animated.View
-          style={[
-            styles.popupCard,
-            { transform: [{ translateY: slideAnim }] },
-          ]}
-        >
-          <View style={styles.iconBox}>
-            <Image
-              source={require("../assets/images/bell.png")}
-            
-              resizeMode="contain"
-            />
-          </View>
+     {showPopup && (
+  <Animated.View
+    style={[
+      styles.popupCard,
+      { transform: [{ translateY: slideAnim }] },
+    ]}
+  >
+    <View style={styles.iconBox}>
+      <Image
+        source={require("../assets/images/bell.png")}
+        resizeMode="contain"
+        style={{ width: 35, height: 35 }}   // SMALLER ICON
+      />
+    </View>
 
-          <Text style={styles.msg}>
-            Allow Guessvibe to send you notifications?
-          </Text>
+    <Text style={styles.msg}>
+      Allow GuessVibe to send you notifications?
+    </Text>
 
-          <TouchableOpacity
-            style={styles.allowBtn}
-            onPress={() => router.push("/next")}
-          >
-            <Text style={styles.allowText}>Allow</Text>
-          </TouchableOpacity>
+    {/* Allow = only close popup */}
+    <TouchableOpacity style={styles.allowBtn} onPress={closePopup}>
+      <Text style={styles.allowText}>Allow</Text>
+    </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleDontAllow}>
-            <Text style={styles.denyText}>Dont allow</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+    {/* Don’t allow = restart to splash/home */}
+    <TouchableOpacity
+      onPress={() => {
+        closePopup();
+        router.replace("/");  // restart app to first screen
+      }}
+    >
+      <Text style={styles.denyText}>Don’t allow</Text>
+    </TouchableOpacity>
+  </Animated.View>
+)}
+
+
+    <TouchableOpacity
+  style={styles.bottomButton}
+  onPress={() => router.push("/next")}
+>
+  <View style={{ alignItems: "center" }}>
+    <Text style={styles.bigText}>Challenge Me</Text>
+    <Text style={styles.smallText}>I will read your mind</Text>
+  </View>
+</TouchableOpacity>
+
     </ImageBackground>
   );
 }
@@ -91,65 +105,102 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "black",
-    opacity: 0.2,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.25)",
   },
 
-  popupCard: {
-    position: "absolute",
-    bottom: 30,
-    alignSelf: "center",
-    width: "85%",
-    padding: 15,
-    borderRadius: 16,
-    backgroundColor: "rgba(73, 92, 144, 0.55)",
-    alignItems: "center",
-    elevation: 10,
-  },
 
-  iconBox: {
-    width: 60,
-    height: 60,
-   
-    alignItems: "center"
-  },
+ 
 
+ 
+
+
+
+bottomButton: {
+  position: "absolute",
+  bottom: 40,
+  alignSelf: "center",
+  width: "55%",
+  height: 70,
+ alignItems: "center",
+  borderColor: "rgba(255,255,255,0.15)",
+  borderWidth : 1,
+  borderRadius: 14,
+  justifyContent: "center",
   
+},
 
-  msg: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 18,
+bigText: {
+  color: "white",
+  fontFamily : "Rajdhani_700Bold",
+  fontSize: 20,       // BIG text
+  fontWeight: "800",
+},
+
+smallText: {
+  color: "white",
+  fontSize: 14,       // SMALL text
+  fontWeight: "400",
+  marginTop: 2,
+},
+
+  bottomButtonText: {
     color: "white",
-  },
-
-  allowBtn: {
-    width: "100%",
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginBottom: 12,
-    alignItems: "center",
-  },
-
-  allowText: {
-    color: "white",
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "700",
   },
+  
+  popupCard: {
+  position: "absolute",
+  top: "32%",
+  alignSelf: "center",
+  width: "75%",            // smaller popup
+  padding: 18,
+  borderRadius: 18,
+  backgroundColor: "rgba(20, 30, 50, 0.85)", // cleaner dark
+  alignItems: "center",
+  borderWidth: 1,
+  borderColor: "rgba(255,255,255,0.15)",
+},
 
-  denyText: {
-    fontSize: 16,
-    color: "white",
-    marginTop: 5,
-  },
+iconBox: {
+  width: 45,
+  height: 45,
+  justifyContent: "center",
+  alignItems: "center",
+  marginBottom: 10,
+},
+
+msg: {
+  fontSize: 15,
+  textAlign: "center",
+  marginBottom: 16,
+  color: "white",
+  lineHeight: 20,
+},
+
+allowBtn: {
+  width: "100%",
+  paddingVertical: 12,
+  borderRadius: 10,
+  backgroundColor: "#1d7cff",
+  marginBottom: 10,
+  alignItems: "center",
+},
+
+allowText: {
+  color: "white",
+  fontSize: 16,
+  fontWeight: "700",
+},
+
+denyText: {
+  fontSize: 15,
+  color: "#d1d1d1",
+  marginTop: 4,
+},
+
 });

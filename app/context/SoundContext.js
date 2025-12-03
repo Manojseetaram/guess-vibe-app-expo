@@ -7,7 +7,6 @@ export function SoundProvider({ children }) {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [bgSound, setBgSound] = useState(null);
 
-  // Play music on app start
   useEffect(() => {
     loadSound();
     return () => {
@@ -15,14 +14,16 @@ export function SoundProvider({ children }) {
     };
   }, []);
 
-  // Enable/Disable sound
   useEffect(() => {
+    if (!bgSound) return;
+
     if (soundEnabled) {
-      bgSound?.playAsync();
+      bgSound.playAsync();
     } else {
-      bgSound?.stopAsync();
+      bgSound.pauseAsync();   // 🔥 correct mute behaviour
+
     }
-  }, [soundEnabled]);
+  }, [soundEnabled, bgSound]);
 
   async function loadSound() {
     const { sound } = await Audio.Sound.createAsync(

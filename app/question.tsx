@@ -1,267 +1,3 @@
-// import { router } from "expo-router";
-// import React, { useState } from "react";
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   TouchableOpacity,
-//   Modal,
-// } from "react-native";
-
-// // MOCK DATA (Your backend later will replace this)
-// const QUESTIONS = [
-//   { id: 1, text: "Is your character male?" },
-//   { id: 2, text: "Is your character real?" },
-//   { id: 3, text: "Is your character from a movie?" },
-//   { id: 4, text: "Does your character have powers?" },
-// ];
-
-// export default function Question() {
-//   const [showExitPopup, setShowExitPopup] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [finishPopup, setFinishPopup] = useState(false);
-
-//   const [index, setIndex] = useState(0); // current question
-
-//   const currentQuestion = QUESTIONS[index];
-
-//   const handleAnswer = () => {
-//     // Show loading bar like Akinator
-//     setLoading(true);
-
-//     setTimeout(() => {
-//       setLoading(false);
-
-//       // NEXT QUESTION
-//       if (index < QUESTIONS.length - 1) {
-//         setIndex(index + 1);
-//       } else {
-//         // FINISH GAME
-//         setFinishPopup(true);
-//       }
-//     }, 1200);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       {/* HEADER */}
-//       <View style={styles.header}>
-//         <TouchableOpacity onPress={() => router.push("/settings")}>
-//           <Text style={styles.icon}>⚙️</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity onPress={() => setShowExitPopup(true)}>
-//           <Text style={styles.icon}>🏠</Text>
-//         </TouchableOpacity>
-//       </View>
-
-//       {/* EXIT POPUP */}
-//       <Modal transparent visible={showExitPopup} animationType="fade">
-//         <View style={styles.modalOverlay}>
-//           <View style={styles.modalBox}>
-//             <Text style={styles.modalTitle}>
-//               Do you want to exit the game?
-//             </Text>
-
-//             <View style={styles.modalButtons}>
-//               <TouchableOpacity
-//                 style={styles.yesBtn}
-//                 onPress={() => {
-//                   setShowExitPopup(false);
-//                   router.push("/next");
-//                 }}
-//               >
-//                 <Text style={styles.yesText}>YES</Text>
-//               </TouchableOpacity>
-
-//               <TouchableOpacity
-//                 style={styles.noBtn}
-//                 onPress={() => setShowExitPopup(false)}
-//               >
-//                 <Text style={styles.noText}>NO</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         </View>
-//       </Modal>
-
-//       {/* FINAL POPUP */}
-//       <Modal transparent visible={finishPopup} animationType="fade">
-//         <View style={styles.modalOverlay}>
-//           <View style={styles.modalBox}>
-//             <Text style={styles.modalTitle}>Game Finished!</Text>
-//             <Text style={{ marginTop: 10, fontSize: 16 }}>
-//               Do you want to play again?
-//             </Text>
-
-//             <View style={styles.modalButtons}>
-//               <TouchableOpacity
-//                 style={styles.yesBtn}
-//                 onPress={() => {
-//                   setFinishPopup(false);
-//                   setIndex(0);
-//                 }}
-//               >
-//                 <Text style={styles.yesText}>YES</Text>
-//               </TouchableOpacity>
-
-//               <TouchableOpacity
-//                 style={styles.noBtn}
-//                 onPress={() => router.push("/next")}
-//               >
-//                 <Text style={styles.noText}>NO</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         </View>
-//       </Modal>
-
-//       {/* LOADING BAR */}
-//       {loading && (
-//         <View style={{ marginTop: 60, marginBottom: 20 }}>
-//           <Text style={{ fontSize: 18 }}>Thinking...</Text>
-//         </View>
-//       )}
-
-//       {/* IMAGE BOX */}
-//       <View style={styles.imageBox}>
-//         <View style={styles.crossLine1} />
-//         <View style={styles.crossLine2} />
-//       </View>
-
-//       {/* QUESTION */}
-//       <View style={styles.questionBox}>
-//         <Text style={styles.questionText}>{currentQuestion.text}</Text>
-//       </View>
-
-//       {/* OPTIONS */}
-//       <View style={styles.row}>
-//         <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
-//           <Text>Probably</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
-//           <Text>Probably Not</Text>
-//         </TouchableOpacity>
-//       </View>
-
-//       <View style={styles.row}>
-//         <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
-//           <Text>Yes</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
-//           <Text>No</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// }
-
-// // -------------------- STYLES --------------------
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     paddingTop: 40,
-//     alignItems: "center",
-//   },
-
-//   header: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     width: "90%",
-//     marginBottom: 30,
-//   },
-//   icon: { fontSize: 26 },
-
-//   modalOverlay: {
-//     flex: 1,
-//     backgroundColor: "rgba(0,0,0,0.5)",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   modalBox: {
-//     width: "80%",
-//     backgroundColor: "#fff",
-//     borderRadius: 14,
-//     padding: 25,
-//     alignItems: "center",
-//   },
-//   modalTitle: { fontSize: 18, fontWeight: "600", textAlign: "center" },
-
-//   modalButtons: {
-//     flexDirection: "row",
-//     marginTop: 25,
-//   },
-//   yesBtn: {
-//     backgroundColor: "#007bff",
-//     paddingVertical: 10,
-//     paddingHorizontal: 30,
-//     borderRadius: 8,
-//     marginRight: 15,
-//   },
-//   yesText: { color: "#fff", fontWeight: "700" },
-//   noBtn: {
-//     borderWidth: 2,
-//     borderColor: "#333",
-//     paddingVertical: 10,
-//     paddingHorizontal: 25,
-//     borderRadius: 8,
-//   },
-//   noText: { color: "#333", fontWeight: "700" },
-
-//   imageBox: {
-//     width: 280,
-//     height: 280,
-//     borderWidth: 2,
-//     borderColor: "#000",
-//     marginBottom: 40,
-//     position: "relative",
-//   },
-//   crossLine1: {
-//     position: "absolute",
-//     width: "100%",
-//     height: 2,
-//     backgroundColor: "#888",
-//     transform: [{ rotate: "45deg" }],
-//     top: "50%",
-//   },
-//   crossLine2: {
-//     position: "absolute",
-//     width: "100%",
-//     height: 2,
-//     backgroundColor: "#888",
-//     transform: [{ rotate: "-45deg" }],
-//     top: "50%",
-//   },
-
-//   questionBox: {
-//     borderWidth: 2,
-//     borderRadius: 10,
-//     paddingVertical: 15,
-//     paddingHorizontal: 20,
-//     marginBottom: 40,
-//   },
-
-//   questionText: { fontSize: 20 },
-
-//   row: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     width: "80%",
-//     marginBottom: 20,
-//   },
-
-//   optionBtn: {
-//     width: 130,
-//     paddingVertical: 12,
-//     alignItems: "center",
-//     borderWidth: 2,
-//     borderRadius: 6,
-//   },
-// });
-// app/question.tsx
 import { router } from "expo-router";
 import React, { useRef, useState, useEffect } from "react";
 import {
@@ -275,14 +11,18 @@ import {
   ActivityIndicator,
   Modal,
   Dimensions,
+  ImageBackground,
 } from "react-native";
-import { Audio } from "expo-av";
+import { useSound } from "./context/SoundContext";
+import { LinearGradient } from "expo-linear-gradient";
+
+
 
 const { width } = Dimensions.get("window");
 
 /* ---------------------------
-   Your 50 QUESTIONS (keep as-is)
-   --------------------------- */
+   QUESTIONS
+---------------------------- */
 const QUESTIONS = [
   { id: 1, text: "Is your character a real person?" },
   { id: 2, text: "Is your character male?" },
@@ -337,8 +77,8 @@ const QUESTIONS = [
 ];
 
 /* ---------------------------
-   Fake guess candidates (you can expand)
-   --------------------------- */
+   FAKE GUESSES
+---------------------------- */
 const GUESSES = [
   "Sherlock Holmes",
   "Harry Potter",
@@ -353,123 +93,91 @@ const GUESSES = [
 ];
 
 /* ---------------------------
-   Genie image chooser
-   Put your genie images in /assets/genie1..4.png
-   --------------------------- */
-const getGenieImage = (index: number) => {
+   GENIE IMAGE
+---------------------------- */
+const getGenieImage = (index) => {
   const percent = (index / QUESTIONS.length) * 100;
-  if (percent < 25) return require("../assets/images/iamge1.png");
-  if (percent < 50) return require("../assets/images/iamge2.png");
+  if (percent < 25) return require("../assets/images/iamge4.png");
+  if (percent < 50) return require("../assets/images/iamge1.png");
   if (percent < 75) return require("../assets/images/iamge3.png");
-  return require("../assets/images/iamge4.png");
+  return require("../assets/images/iamge2.png");
 };
 
 /* ---------------------------
-   Component
-   --------------------------- */
+   COMPONENT
+---------------------------- */
 export default function QuestionPage() {
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0); // 0..100
+  const [progress, setProgress] = useState(0);
   const [finalModal, setFinalModal] = useState(false);
-  const [guess, setGuess] = useState<string | null>(null);
+  const [guess, setGuess] = useState(null);
   const [exitConfirm, setExitConfirm] = useState(false);
 
-  // Animated values for genie (breathing + transition)
+  const { soundEnabled, setSoundEnabled } = useSound(); // 🔥 USING YOUR GLOBAL SOUND
+
+  // Animations
   const scale = useRef(new Animated.Value(1)).current;
   const fade = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
 
-  // Animate idle breathing
+  /* ---------------------------
+     BREATHING ANIMATION
+  ---------------------------- */
   useEffect(() => {
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(scale, { toValue: 1.05, duration: 1500, useNativeDriver: true, easing: Easing.inOut(Easing.ease) }),
-        Animated.timing(scale, { toValue: 1.0, duration: 1500, useNativeDriver: true, easing: Easing.inOut(Easing.ease) }),
+        Animated.timing(scale, { toValue: 1.05, duration: 1500, useNativeDriver: true }),
+        Animated.timing(scale, { toValue: 1.0, duration: 1500, useNativeDriver: true }),
       ])
     );
     loop.start();
     return () => loop.stop();
-  }, [scale]);
+  }, []);
 
-  // play tap sound safely (no crash if file missing)
-  async function playTapSound() {
-  try {
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/music/tap.mp3")
-    );
-
-    await sound.playAsync();
-
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (!status.isLoaded) return; // ✅ FIX: avoids TypeScript error
-
-      if (status.didJustFinish) {
-        sound.unloadAsync();
-      }
-    });
-  } catch (e) {
-    // console.log("tap sound unavailable", e);
-  }
-}
-
-
-  // Called when user answers (any option)
-  const handleAnswer = async (answer: string) => {
-    // play tap
-    playTapSound();
-
-    // small "thinking" animation: fade out genie, show loader, then fade in new genie
+  /* ---------------------------
+     ON ANSWER CLICK
+  ---------------------------- */
+  const handleAnswer = () => {
     setLoading(true);
 
-    // brief "shake" effect
+    // small shake
     Animated.sequence([
       Animated.timing(rotate, { toValue: 1, duration: 80, useNativeDriver: true }),
       Animated.timing(rotate, { toValue: -1, duration: 80, useNativeDriver: true }),
       Animated.timing(rotate, { toValue: 0, duration: 80, useNativeDriver: true }),
     ]).start();
 
-    // Fade out
-    Animated.timing(fade, { toValue: 0, duration: 180, useNativeDriver: true }).start();
+    // fade out
+    Animated.timing(fade, { toValue: 0, duration: 200, useNativeDriver: true }).start();
 
-    // simulate thinking time (loading)
     setTimeout(() => {
-      // update progress proportional to answered questions
       const nextIndex = index < QUESTIONS.length - 1 ? index + 1 : index;
-      const newProgress = Math.min(100, Math.round(((nextIndex) / (QUESTIONS.length - 1)) * 100));
+      const newProgress = Math.round((nextIndex / (QUESTIONS.length - 1)) * 100);
+
+      setIndex(nextIndex);
       setProgress(newProgress);
 
-      // set new question or finish
-      if (index < QUESTIONS.length - 1) {
-        setIndex(nextIndex);
-      } else {
-        // finished -> show fake AI guess
+      if (index === QUESTIONS.length - 1) {
         const randomGuess = GUESSES[Math.floor(Math.random() * GUESSES.length)];
         setGuess(randomGuess);
         setFinalModal(true);
       }
 
-      // fade back in and stop loading
       Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true }).start();
       setLoading(false);
-    }, 900); // adjust thinking duration here
+    }, 900);
   };
 
-  // previous question
+  /* ---------------------------
+     BACK BUTTON
+  ---------------------------- */
   const handleBack = () => {
     if (index > 0) {
-      setIndex(index - 1);
-      const newProgress = Math.max(0, Math.round(((index - 1) / (QUESTIONS.length - 1)) * 100));
-      setProgress(newProgress);
+      const newIndex = index - 1;
+      setIndex(newIndex);
+      setProgress(Math.round((newIndex / (QUESTIONS.length - 1)) * 100));
     }
-  };
-
-  // on Play Again
-  const handlePlayAgain = () => {
-    setFinalModal(false);
-    setIndex(0);
-    setProgress(0);
-    setGuess(null);
   };
 
   const rotateDeg = rotate.interpolate({
@@ -481,78 +189,106 @@ export default function QuestionPage() {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push("/settings")}>
-          <Text style={styles.headerIcon}>⚙️</Text>
-        </TouchableOpacity>
-
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity onPress={() => setExitConfirm(true)} style={{ marginRight: 14 }}>
-            <Text style={styles.headerIcon}>🏠</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleBack}>
-            <Text style={styles.headerIcon}>⬅️</Text>
-          </TouchableOpacity>
-        </View>
+      {/* BG */}
+      <View style={styles.bgWrap}>
+        <Image source={require("../assets/images/bg.png")} style={styles.bgImage} />
       </View>
 
-      {/* GENIE IMAGE + Animated */}
-      <Animated.View
-        style={[
-          styles.genieWrap,
-          { transform: [{ scale }, { rotate: rotateDeg }], opacity: fade },
-        ]}
+      {/* HEADER */}
+<View style={styles.header}>
+  
+  {/* SOUND BUTTON */}
+  <TouchableOpacity onPress={() => setSoundEnabled(!soundEnabled)} style={styles.iconBtn}>
+    <Image
+      source={
+        soundEnabled
+          ? require("../assets/images/volume.png")
+          : require("../assets/images/mute.png")
+      }
+      style={styles.headerIcon}
+    />
+  </TouchableOpacity>
+
+  {/* HOME BUTTON */}
+  <TouchableOpacity onPress={() => setExitConfirm(true)} style={styles.iconBtn}>
+    <Image
+      source={require("../assets/images/home.png")}
+      style={styles.headerIcon}
+    />
+  </TouchableOpacity>
+
+</View>
+
+
+ <View style={styles.genieCenterContainer}>
+  <Animated.View
+    style={[
+      styles.genieWrap,
+      { transform: [{ scale }, { rotate: rotateDeg }], opacity: fade },
+    ]}
+  >
+    <Image source={currentImage} style={styles.genieImage} />
+  </Animated.View>
+</View>
+
+
+    <View style={styles.bottomSection}>
+      <ImageBackground
+        source={require("../assets/images/bg-q.png")}
+        style={styles.questionBubble}
+        resizeMode="stretch"
       >
-        <Image source={currentImage} style={styles.genieImage} />
-      </Animated.View>
-
-      {/* PROGRESS BAR */}
-
-
-      {/* QUESTION */}
-      <View style={styles.questionBox}>
         <Text style={styles.questionNumber}>Question #{index + 1}</Text>
         <Text style={styles.questionText}>{QUESTIONS[index].text}</Text>
-      </View>
+      </ImageBackground>
 
-      {/* LOADING overlay */}
+      {/* LOADING */}
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#fff" />
           <Text style={{ color: "#fff", marginTop: 10 }}>Thinking...</Text>
         </View>
       )}
-            <View style={styles.progressContainer}>
-        <View style={styles.progressBackground}>
-          <Animated.View style={[styles.progressFill, { width: `${progress}%` }]} />
-        </View>
-        <Text style={styles.progressText}>{progress}%</Text>
-      </View>
 
-      {/* OPTIONS */}
-      <View style={styles.optionsContainer}>
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.optionBtn} onPress={() => handleAnswer("probably")}>
-            <Text style={styles.optionTxt}>Probably</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionBtn} onPress={() => handleAnswer("probably_not")}>
-            <Text style={styles.optionTxt}>Probably Not</Text>
-          </TouchableOpacity>
-        </View>
+     
 
-        <View style={[styles.row, { marginTop: 12 }]}>
-          <TouchableOpacity style={styles.optionBtn} onPress={() => handleAnswer("yes")}>
-            <Text style={styles.optionTxt}>Yes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionBtn} onPress={() => handleAnswer("no")}>
-            <Text style={styles.optionTxt}>No</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* ANSWERS */}
+  <View style={styles.optionsContainer}>
+  <View style={styles.row}>
+    <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
+      <Text style={styles.optionTxt}>Probably</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
+      <Text style={styles.optionTxt}>Probably Not</Text>
+    </TouchableOpacity>
+  </View>
 
-      {/* EXIT CONFIRM */}
+  <View style={styles.row}>
+    <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
+      <Text style={styles.optionTxt}>Yes</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.optionBtn} onPress={handleAnswer}>
+      <Text style={styles.optionTxt}>No</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
+      <View style={styles.progressContainer}>
+  <View style={styles.progressBackground}>
+    
+    <Animated.View style={[styles.progressFill, { width: `${progress}%` }]}>
+      <LinearGradient
+        colors={["#6EC6FF", "#FFFFFF"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.gradientFill}
+      />
+    </Animated.View>
+
+  </View>
+</View>
+</View>
+      {/* EXIT MODAL */}
       <Modal transparent visible={exitConfirm} animationType="fade">
         <View style={styles.modalBg}>
           <View style={styles.modalBox}>
@@ -577,19 +313,18 @@ export default function QuestionPage() {
         </View>
       </Modal>
 
-      {/* FINAL GUESS MODAL */}
+      {/* FINAL GUESS */}
       <Modal transparent visible={finalModal} animationType="fade">
         <View style={styles.modalBg}>
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>I think I found it!</Text>
-            <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "700" }}>{guess}</Text>
-            <Text style={{ marginTop: 8, color: "#333" }}>Am I right?</Text>
+            <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "700" , color : "white" }}>{guess}</Text>
+            <Text style={{ marginTop: 8 , color : "white" }}>Am I right?</Text>
 
             <View style={{ flexDirection: "row", marginTop: 20 }}>
               <TouchableOpacity
                 style={styles.yesBtn}
                 onPress={() => {
-                  // user confirms — go to final /next page OR show more info
                   setFinalModal(false);
                   router.push("/next");
                 }}
@@ -597,7 +332,7 @@ export default function QuestionPage() {
                 <Text style={styles.yesText}>YES</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.noBtn} onPress={handlePlayAgain}>
+              <TouchableOpacity style={styles.noBtn} onPress={() => setFinalModal(false)}>
                 <Text style={styles.noText}>PLAY AGAIN</Text>
               </TouchableOpacity>
             </View>
@@ -610,18 +345,58 @@ export default function QuestionPage() {
 
 /* ---------------------------
    STYLES
-   --------------------------- */
+---------------------------- */
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", alignItems: "center", paddingTop: 44 },
+  container: { flex: 1, backgroundColor: "#fff", alignItems: "center" },
 
-  header: {
-    width: "94%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
+  bgWrap: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+    alignItems : "center"
   },
-  headerIcon: { fontSize: 28 },
+  bottomSection: {
+  position: "absolute",
+  bottom: "10%",       // 🔥 10% gap from bottom
+  width: "100%",
+  
+  alignItems: "center",
+},
+genieCenterContainer: {
+  position: "absolute",
+  top: "20%",          // 👈 moves it vertically to screen center (adjust if needed)
+  width: "100%",
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+
+  bgImage: { width: "100%", height: "100%", resizeMode: "cover" },
+
+ header: {
+  position: "absolute",
+  top: 70,                // ✨ Gives perfect top spacing
+  width: "90%",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  zIndex: 10,
+},
+
+iconBtn: {
+  padding: 6,             // Makes touch area bigger
+},
+
+headerIcon: {
+  width: 32,
+  height: 32,
+  resizeMode: "contain",
+},
+
+
 
   genieWrap: {
     width: width * 0.85,
@@ -629,35 +404,40 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
   },
-  genieImage: { width: 280, height: 260, resizeMode: "contain" },
+  genieImage: { width: 280, height: 360, resizeMode: "contain" , alignItems : "center" , justifyContent : "center" },
 
-  progressContainer: { width: "92%", alignItems: "center", marginBottom: 6 },
+  progressContainer: { width: "100%", alignItems: "center", marginBottom: 6 },
   progressBackground: {
     width: "100%",
     height: 14,
     backgroundColor: "#ddd",
-    borderRadius: 12,
+  
     overflow: "hidden",
   },
   progressFill: {
-    height: "100%",
-    backgroundColor: "#ffcc00",
-  },
-  progressText: { marginTop: 6, fontWeight: "700", color: "#333" },
+  height: "100%",
+  overflow: "hidden",
+},
 
-  questionBox: {
-    width: "92%",
-    borderWidth: 2,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    paddingVertical: 16,
-    paddingHorizontal: 14,
+gradientFill: {
+  width: "100%",
+  height: "100%",
+},
+  // progressText: { marginTop: 6, fontWeight: "700", color: "#333" },
+
+  questionBubble: {
+    width: "110%",
+    minHeight: 140,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 8,
     marginBottom: 10,
-    alignItems: "center",
   },
+
   questionNumber: { fontSize: 14, color: "#666", marginBottom: 6 },
-  questionText: { fontSize: 20, textAlign: "center" },
+  questionText: { fontSize: 20, textAlign: "center", color: "white" },
 
   loadingOverlay: {
     position: "absolute",
@@ -667,28 +447,77 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  optionsContainer: {
-    marginTop: 18,
-    width: "92%",
-    alignItems: "center",
-  },
-  row: { flexDirection: "row", justifyContent: "space-between", width: "100%" },
+  optionsContainer: {  width: "100%", alignItems: "center" , },
+  row: { flexDirection: "row", width: "100%" , margin : 0 , padding : 0   },
   optionBtn: {
-    width: "48%",
-    backgroundColor: "#f5f5f5",
+    flex : 1,
+    width: "50%",
+    backgroundColor: "#142131",
     paddingVertical: 14,
-    borderRadius: 10,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ddd",
+    borderWidth: 2,
+    borderColor: "white",
+    padding : 0,
+    margin : 0
   },
-  optionTxt: { fontSize: 16 },
+  optionTxt: { fontSize: 16 , color : "white" },
 
-  modalBg: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center" },
-  modalBox: { width: "85%", backgroundColor: "#fff", padding: 20, borderRadius: 14, alignItems: "center" },
-  modalTitle: { fontSize: 18, fontWeight: "700", textAlign: "center" },
-  yesBtn: { backgroundColor: "#1d7cff", paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8, marginRight: 12 },
-  yesText: { color: "#fff", fontWeight: "700" },
-  noBtn: { borderWidth: 1, borderColor: "#1d7cff", paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
-  noText: { color: "#1d7cff", fontWeight: "700" },
+modalBg: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.4)",
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+modalBox: {
+  width: "75%",
+  padding: 20,
+  backgroundColor: "rgba(20, 30, 50, 0.85)",
+  borderRadius: 18,
+  borderWidth: 1,
+  borderColor: "rgba(255,255,255,0.15)",
+  alignItems: "center",
+},
+
+modalTitle: {
+  fontSize: 16,
+  color: "white",
+  textAlign: "center",
+  lineHeight: 22,
+},
+
+yesBtn: {
+  flex: 1,
+  backgroundColor: "#142131",
+  paddingVertical: 10,
+  borderRadius: 10,
+  marginRight: 8,
+  alignItems: "center",
+  borderColor: "rgba(255,255,255,0.15)",
+  borderWidth : 1
+  
+},
+
+yesText: {
+  color: "white",
+  fontSize: 16,
+  fontWeight: "700",
+},
+
+noBtn: {
+  flex: 1,
+  paddingVertical: 10,
+  borderRadius: 10,
+  marginLeft: 8,
+  alignItems: "center",
+  borderColor: "rgba(255,255,255,0.15)",
+  borderWidth : 1
+},
+
+noText: {
+  color: "#d1d1d1",
+  fontSize: 15,
+  fontWeight: "600",
+},
+
 });
