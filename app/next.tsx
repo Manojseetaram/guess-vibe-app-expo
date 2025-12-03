@@ -101,7 +101,8 @@ video: {
   startBtn: {
     position: "absolute",
     bottom: 60,
-    backgroundColor: "#FFF",
+    borderColor: "rgba(255,255,255,0.15)",
+  borderWidth : 1,
     paddingVertical: 12,
     paddingHorizontal: 50,
     borderRadius: 10,
@@ -109,6 +110,6 @@ video: {
   startText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#142131",
+    color: "#ffff",
   },
 });
