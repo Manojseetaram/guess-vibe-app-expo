@@ -20,7 +20,7 @@ export function SoundProvider({ children }) {
     if (soundEnabled) {
       bgSound.playAsync();
     } else {
-      bgSound.pauseAsync();   // 🔥 correct mute behaviour
+      bgSound.pauseAsync();  
 
     }
   }, [soundEnabled, bgSound]);

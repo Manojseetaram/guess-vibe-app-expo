@@ -1,62 +1,70 @@
-// // let socket: WebSocket | null = null;
 
-// // export const connectSocket = () => {
-// //   socket = new WebSocket("wss://unfearingly-heterozygous-brittny.ngrok-free.dev/ws");
+// let socket: WebSocket | null = null;
+// let listeners: any[] = [];
 
-// //   socket.onopen = () => {
-// //     console.log("WebSocket Connected!");
-// //   };
-
-// //   socket.onmessage = (msg) => {
-// //     console.log("Received:", msg.data);
-// //   };
-
-// //   socket.onerror = (err) => {
-// //     console.log("Socket Error:", err);
-// //   };
-
-// //   socket.onclose = () => {
-// //     console.log("Socket Closed!");
-// //   };
-
-// //   return socket;
-// // };
-
-// // export const getSocket = () => socket;
-// // app/utils/sockets.js
-// let socket = null;
+// export const WS_URL = "wss://unfearingly-heterozygous-brittny.ngrok-free.dev/ws"; 
 
 // export const connectSocket = () => {
 //   if (socket && socket.readyState === WebSocket.OPEN) return socket;
 
-//   // ⬅️ UPDATE WITH YOUR BACKEND WS URL
-//   socket = new WebSocket("wss://unfearingly-heterozygous-brittny.ngrok-free.dev/ws");
+//   try {
+//     socket = new WebSocket(WS_URL);
 
-//   socket.onopen = () => {
-//     console.log("WS Connected");
-//   };
+//     socket.onopen = () => {
+//       console.log("WS Connected");
+//     };
 
-//   socket.onmessage = (msg) => {
-//     console.log("WS MESSAGE:", msg.data);
-//   };
+//     socket.onmessage = (msg) => {
+//       // dispatch to listeners
+//       listeners.forEach((fn) => {
+//         try {
+//           fn(msg);
+//         } catch (e) {
+//           console.warn("listener error", e);
+//         }
+//       });
+//     };
 
-//   socket.onerror = (err) => {
-//     console.log("WS ERROR:", err);
-//   };
+//     socket.onerror = (err) => {
+//       console.log("WS ERROR:", err);
+//     };
 
-//   socket.onclose = () => {
-//     console.log("WS CLOSED");
-//   };
+//     socket.onclose = (ev) => {
+//       console.log("WS CLOSED", ev && ev.code);
+      
+//     };
+//   } catch (e) {
+//     console.log("connectSocket error", e);
+//   }
 
 //   return socket;
 // };
 
 // export const getSocket = () => socket;
-// app/utils/sockets.js
-let socket = null;
-let listeners = [];
 
-export const WS_URL = "wss://unfearingly-heterozygous-brittny.ngrok-free.dev/ws"; // <- put your wss ngrok url
+// export const subscribeSocket = (fn: (msg: { data: string; }) => void) => {
+//   listeners.push(fn);
+//   return () => {
+//     listeners = listeners.filter((l) => l !== fn);
+//   };
+// };
+
+// export const closeSocket = () => {
+//   try {
+//     if (socket) {
+//       socket.close();
+//       socket = null;
+//       listeners = [];
+//     }
+//   } catch (e) {
+//     console.log("closeSocket error", e);
+//   }
+// };
+let socket: WebSocket | null = null;
+let listeners: any[] = [];
+let pendingMessages: any[] = [];
+
+export const WS_URL = "wss://unfearingly-heterozygous-brittny.ngrok-free.dev/ws";
 
 export const connectSocket = () => {
   if (socket && socket.readyState === WebSocket.OPEN) return socket;
@@ -66,10 +74,16 @@ export const connectSocket = () => {
 
     socket.onopen = () => {
       console.log("WS Connected");
+
+      // Send all pending messages after connection
+      pendingMessages.forEach((msg) => {
+        console.log("SENDING PENDING:", msg);
+        socket?.send(JSON.stringify(msg));
+      });
+      pendingMessages = [];
     };
 
     socket.onmessage = (msg) => {
-      // dispatch to listeners
       listeners.forEach((fn) => {
         try {
           fn(msg);
@@ -84,9 +98,9 @@ export const connectSocket = () => {
     };
 
     socket.onclose = (ev) => {
-      console.log("WS CLOSED", ev && ev.code);
-      // keep socket reference but if you want auto-reconnect, implement here.
+      console.log("WS CLOSED", ev.code);
     };
+
   } catch (e) {
     console.log("connectSocket error", e);
   }
@@ -94,9 +108,23 @@ export const connectSocket = () => {
   return socket;
 };
 
+// Updated send wrapper
+export const sendWSMessage = (payload: any) => {
+  const ws = socket;
+
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    console.log("DIRECT SEND:", payload);
+    ws.send(JSON.stringify(payload));
+  } else {
+    console.log("QUEUEING PENDING MESSAGE:", payload);
+    pendingMessages.push(payload);
+    connectSocket();
+  }
+};
+
 export const getSocket = () => socket;
 
-export const subscribeSocket = (fn) => {
+export const subscribeSocket = (fn: (msg: { data: string }) => void) => {
   listeners.push(fn);
   return () => {
     listeners = listeners.filter((l) => l !== fn);
@@ -109,6 +137,7 @@ export const closeSocket = () => {
       socket.close();
       socket = null;
       listeners = [];
+      pendingMessages = [];
     }
   } catch (e) {
     console.log("closeSocket error", e);

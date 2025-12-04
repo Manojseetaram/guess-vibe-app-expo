@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Image,
   Animated,
-  Easing,
+
   ActivityIndicator,
   Modal,
   Dimensions,
@@ -20,8 +20,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { connectSocket, getSocket, subscribeSocket, closeSocket } from "./utils/sockets";
 
 const { width } = Dimensions.get("window");
-
-const getGenieImage = (count) => {
+type FinalGuessType = {
+  guess: string;
+  confidence?: number;
+  sessionId?: string;
+};
+const getGenieImage = (count: number) => {
   const QUESTIONS_TOTAL = 15;
   const percent = (count / QUESTIONS_TOTAL) * 100;
   if (percent < 25) return require("../assets/images/iamge4.png");
@@ -29,6 +33,39 @@ const getGenieImage = (count) => {
   if (percent < 75) return require("../assets/images/iamge3.png");
   return require("../assets/images/iamge2.png");
 };
+const sendInitSafely = (payload: any, retries = 12) => {
+  let ws = getSocket();
+
+  // If WS is NULL or CLOSED → reconnect
+  if (!ws || ws.readyState === WebSocket.CLOSED) {
+    console.log("WS CLOSED → RECONNECTING…");
+    connectSocket();
+    return setTimeout(() => sendInitSafely(payload, retries - 1), 500);
+  }
+
+  // If WS is opening → retry
+  if (ws.readyState === WebSocket.CONNECTING) {
+    console.log("WS CONNECTING… WAITING");
+    return setTimeout(() => sendInitSafely(payload, retries - 1), 300);
+  }
+
+  // If WS is OPEN → send
+  if (ws.readyState === WebSocket.OPEN) {
+    console.log("SAFE INIT SENT:", payload);
+    ws.send(JSON.stringify(payload));
+    return;
+  }
+
+  // Retry limit reached
+  if (retries <= 0) {
+    console.log("INIT FAILED → WS NEVER OPENED");
+    return;
+  }
+
+  console.log("UNKNOWN STATE", ws.readyState);
+  setTimeout(() => sendInitSafely(payload, retries - 1), 300);
+};
+
 
 export default function QuestionPage() {
   const [questionText, setQuestionText] = useState("");
@@ -37,8 +74,9 @@ export default function QuestionPage() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [finalModal, setFinalModal] = useState(false);
-  const [finalGuess, setFinalGuess] = useState(null);
+  const [finalGuess, setFinalGuess] = useState<FinalGuessType | null>(null);
   const [exitConfirm, setExitConfirm] = useState(false);
+const [playAgainLoading, setPlayAgainLoading] = useState(false);
 
   const { soundEnabled, setSoundEnabled } = useSound();
 
@@ -59,7 +97,7 @@ export default function QuestionPage() {
 
     connectSocket();
 
-    const unsub = subscribeSocket((msg) => {
+    const unsub = subscribeSocket((msg: { data: string; }) => {
       try {
         const payload = JSON.parse(msg.data);
         console.log("QUESTION RECEIVED:", payload);
@@ -93,6 +131,7 @@ export default function QuestionPage() {
     return () => {
       unsub();
     };
+
   }, []);
 
   const rotateDeg = rotate.interpolate({
@@ -102,7 +141,7 @@ export default function QuestionPage() {
 
   const currentImage = getGenieImage(questionCount);
 
-  const sendAnswer = (answer) => {
+  const sendAnswer = (answer: string) => {
     setLoading(true);
 
     Animated.sequence([
@@ -277,50 +316,34 @@ export default function QuestionPage() {
               </TouchableOpacity>
 
               {/* 🔥 FIXED PLAY AGAIN BUTTON */}
-              <TouchableOpacity
-                style={styles.noBtn}
-                onPress={() => {
-  setFinalModal(false);
+<TouchableOpacity
+  style={styles.noBtn}
+  onPress={async () => {
+    setPlayAgainLoading(true);
 
-  // 🔥 FULL RESET UI
-  setQuestionCount(0);
-  setProgress(0);
-  setQuestionText("");
-  setSessionId("");
-  setLoading(true);
+    setFinalModal(false);   // 🔥 CLOSE THE FINAL GUESS POPUP
 
-  const ws = getSocket();
+    setQuestionCount(0);
+    setProgress(0);
+    setQuestionText("");
+    setSessionId("");
+    setLoading(true);
 
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    console.log("PLAY AGAIN → SENDING INIT");
+    const payload = { type: "init", userID: "12345" };
+    console.log("PLAY AGAIN → SAFE INIT START:", payload);
 
-    ws.send(
-      JSON.stringify({
-        type: "init",
-        userID: "12345",
-      })
-    );
-  } else {
-    console.log("WS NOT READY — reconnecting…");
-    connectSocket();
+    sendInitSafely(payload);
 
-    setTimeout(() => {
-      const ws2 = getSocket();
-      if (ws2 && ws2.readyState === WebSocket.OPEN) {
-        ws2.send(
-          JSON.stringify({
-            type: "init",
-            userID: "12345",
-          })
-        );
-      }
-    }, 500);
-  }
-}}
+    await new Promise(res => setTimeout(res, 2000));
 
-              >
-                <Text style={styles.noText}>PLAY AGAIN</Text>
-              </TouchableOpacity>
+    setPlayAgainLoading(false);
+  }}
+>
+  <Text style={styles.noText}>
+    {playAgainLoading ? "Loading..." : "PLAY AGAIN"}
+  </Text>
+</TouchableOpacity>
+
             </View>
           </View>
         </View>

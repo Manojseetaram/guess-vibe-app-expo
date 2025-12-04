@@ -12,11 +12,11 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 
-const API_URL = "https://unfearingly-heterozygous-brittny.ngrok-free.dev";  // 🔥 DIRECT BACKEND
+const API_URL = "https://unfearingly-heterozygous-brittny.ngrok-free.dev";  
 
 export default function Profile() {
   const router = useRouter();
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState<string | null >(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,9 +32,7 @@ export default function Profile() {
     }
   };
 
-  // ------------------------------------
-  //    LOGIN FUNCTION (BACKEND CONNECT)
-  // ------------------------------------
+ 
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please enter email & password");

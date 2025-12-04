@@ -9,7 +9,7 @@ import {
   Image,
   Animated,
   Easing,
-  Dimensions,
+  
 } from "react-native";
 
 import { wp, hp } from "./utils/responsive";
@@ -31,7 +31,7 @@ export default function Home() {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [slideAnim]);
 
   const closePopup = () => {
     Animated.timing(slideAnim, {

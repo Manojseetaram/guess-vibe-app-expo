@@ -20,7 +20,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // ⛓️ DIRECT API URL (NO .env)
+  
   const API_BASE_URL = "https://unfearingly-heterozygous-brittny.ngrok-free.dev";
 
   // Pick Profile Image

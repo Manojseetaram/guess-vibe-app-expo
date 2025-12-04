@@ -7,16 +7,16 @@ export default function Splash() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/"); // navigate to main page
+      router.replace("/"); 
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/logo.png")} // ✅ just logo
+        source={require("../assets/images/logo.png")} 
         style={styles.logo}
         resizeMode="contain"
       />
@@ -27,12 +27,12 @@ export default function Splash() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center", // center vertically
-    alignItems: "center",     // center horizontally
+    justifyContent: "center", 
+    alignItems: "center",     
     backgroundColor: "#fff",  
   },
   logo: {
-    width: 380,   // change size as you like
+    width: 380,   
     height: 320,
   },
 });
