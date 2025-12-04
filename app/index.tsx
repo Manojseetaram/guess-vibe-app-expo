@@ -5,17 +5,18 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  BackHandler,
-  Platform,
   ImageBackground,
   Image,
   Animated,
   Easing,
+  Dimensions,
 } from "react-native";
+
+import { wp, hp } from "./utils/responsive";
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
-  const slideAnim = useRef(new Animated.Value(200)).current;
+  const slideAnim = useRef(new Animated.Value(hp(30))).current;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,7 +35,7 @@ export default function Home() {
 
   const closePopup = () => {
     Animated.timing(slideAnim, {
-      toValue: 200,
+      toValue: hp(30),
       duration: 350,
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
@@ -49,53 +50,53 @@ export default function Home() {
     >
       <View style={styles.overlay} />
 
-     {showPopup && (
-  <Animated.View
-    style={[
-      styles.popupCard,
-      { transform: [{ translateY: slideAnim }] },
-    ]}
-  >
-    <View style={styles.iconBox}>
-      <Image
-        source={require("../assets/images/bell.png")}
-        resizeMode="contain"
-        style={{ width: 35, height: 35 }}   // SMALLER ICON
-      />
-    </View>
+      {/* POPUP */}
+      {showPopup && (
+        <Animated.View
+          style={[
+            styles.popupCard,
+            { transform: [{ translateY: slideAnim }] },
+          ]}
+        >
+          <View style={styles.iconBox}>
+            <Image
+              source={require("../assets/images/bell.png")}
+              resizeMode="contain"
+              style={{ width: wp(8), height: wp(8) }}
+            />
+          </View>
 
-    <Text style={styles.msg}>
-      Allow GuessVibe to send you notifications?
-    </Text>
+          <Text style={styles.msg}>
+            Allow GuessVibe to send you notifications?
+          </Text>
 
-    {/* Allow = only close popup */}
-    <TouchableOpacity style={styles.allowBtn} onPress={closePopup}>
-      <Text style={styles.allowText}>Allow</Text>
-    </TouchableOpacity>
+          {/* Allow button */}
+          <TouchableOpacity style={styles.allowBtn} onPress={closePopup}>
+            <Text style={styles.allowText}>Allow</Text>
+          </TouchableOpacity>
 
-    {/* Don’t allow = restart to splash/home */}
-    <TouchableOpacity
-      onPress={() => {
-        closePopup();
-        router.replace("/");  // restart app to first screen
-      }}
-    >
-      <Text style={styles.denyText}>Don’t allow</Text>
-    </TouchableOpacity>
-  </Animated.View>
-)}
+          {/* Deny button */}
+          <TouchableOpacity
+            onPress={() => {
+              closePopup();
+              router.replace("/");
+            }}
+          >
+            <Text style={styles.denyText}>Don’t allow</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      )}
 
-
-    <TouchableOpacity
-  style={styles.bottomButton}
-  onPress={() => router.push("/next")}
->
-  <View style={{ alignItems: "center" }}>
-    <Text style={styles.bigText}>Challenge Me</Text>
-    <Text style={styles.smallText}>I will read your mind</Text>
-  </View>
-</TouchableOpacity>
-
+      {/* BOTTOM BUTTON */}
+      <TouchableOpacity
+        style={styles.bottomButton}
+        onPress={() => router.push("/next")}
+      >
+        <View style={{ alignItems: "center" }}>
+          <Text style={styles.bigText}>Challenge Me</Text>
+          <Text style={styles.smallText}>I will read your mind</Text>
+        </View>
+      </TouchableOpacity>
     </ImageBackground>
   );
 }
@@ -112,95 +113,85 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.25)",
   },
 
+  /* ---------- BOTTOM BUTTON ---------- */
 
- 
+  bottomButton: {
+    position: "absolute",
+    bottom: hp(10),
+    alignSelf: "center",
+    width: wp(60),
+    height: hp(8),
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: wp(3),
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
 
- 
-
-
-
-bottomButton: {
-  position: "absolute",
-  bottom: 40,
-  alignSelf: "center",
-  width: "55%",
-  height: 70,
- alignItems: "center",
-  borderColor: "rgba(255,255,255,0.15)",
-  borderWidth : 1,
-  borderRadius: 14,
-  justifyContent: "center",
-  
-},
-
-bigText: {
-  color: "white",
- fontFamily: "Anton_400Regular",
-  fontSize: 20,       
-  fontWeight: "800",
-},
-
-smallText: {
-  color: "white",
-  fontSize: 14,      
-  fontWeight: "400",
-  marginTop: 2,
-},
-
-  bottomButtonText: {
+  bigText: {
     color: "white",
-    fontSize: 18,
+    fontSize: hp(2.8),
+    fontWeight: "800",
+    fontFamily: "Anton_400Regular",
+  },
+
+  smallText: {
+    color: "white",
+    fontSize: hp(1.8),
+    marginTop: hp(0.5),
+  },
+
+  /* ---------- POPUP ---------- */
+
+  popupCard: {
+    position: "absolute",
+    top: hp(35),
+    alignSelf: "center",
+    width: wp(75),
+    paddingVertical: hp(3),
+    paddingHorizontal: wp(5),
+    borderRadius: wp(5),
+    backgroundColor: "rgba(20, 30, 50, 0.85)",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
+  },
+
+  iconBox: {
+    width: wp(12),
+    height: wp(12),
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: hp(1),
+  },
+
+  msg: {
+    fontSize: hp(2),
+    color: "white",
+    textAlign: "center",
+    marginBottom: hp(2),
+    lineHeight: hp(2.5),
+  },
+
+  allowBtn: {
+    width: "100%",
+    paddingVertical: hp(1.8),
+    borderRadius: wp(3),
+    backgroundColor: "#1d7cff",
+    marginBottom: hp(1),
+    alignItems: "center",
+  },
+
+  allowText: {
+    color: "white",
+    fontSize: hp(2),
     fontWeight: "700",
   },
 
-  popupCard: {
-  position: "absolute",
-  top: "52%",
-  alignSelf: "center",
-  width: "75%",            // smaller popup
-  padding: 18,
-  borderRadius: 18,
-  backgroundColor: "rgba(20, 30, 50, 0.85)", // cleaner dark
-  alignItems: "center",
-  borderWidth: 1,
-  borderColor: "rgba(255,255,255,0.15)",
-},
-
-iconBox: {
-  width: 45,
-  height: 45,
-  justifyContent: "center",
-  alignItems: "center",
-  marginBottom: 10,
-},
-
-msg: {
-  fontSize: 15,
-  textAlign: "center",
-  marginBottom: 16,
-  color: "white",
-  lineHeight: 20,
-},
-
-allowBtn: {
-  width: "100%",
-  paddingVertical: 12,
-  borderRadius: 10,
-  backgroundColor: "#1d7cff",
-  marginBottom: 10,
-  alignItems: "center",
-},
-
-allowText: {
-  color: "white",
-  fontSize: 16,
-  fontWeight: "700",
-},
-
-denyText: {
-  fontSize: 15,
-  color: "#d1d1d1",
-  marginTop: 4,
-},
-
+  denyText: {
+    fontSize: hp(1.9),
+    color: "#d1d1d1",
+    marginTop: hp(0.5),
+  },
 });

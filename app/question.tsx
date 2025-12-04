@@ -21,20 +21,8 @@ import { connectSocket, getSocket, subscribeSocket, closeSocket } from "./utils/
 
 const { width } = Dimensions.get("window");
 
-/* ---------------------------
-   NOTE: NO LOCAL QUESTIONS[] USED
-   Questions come from backend via WebSocket:
-   { type: "question", question: "...", sessionId: "..." }
-   Final guess: { type: "final_guess", sessionId: "...", guess: "...", confidence: 0.92 }
-   Session end: { type: "session_end" }
----------------------------- */
-
-/* ---------------------------
-   GENIE IMAGE (keeps same mapping as you had)
----------------------------- */
 const getGenieImage = (count) => {
-  // use count to vary image - same logic you had
-  const QUESTIONS_TOTAL = 15; // used only for image stage mapping
+  const QUESTIONS_TOTAL = 15;
   const percent = (count / QUESTIONS_TOTAL) * 100;
   if (percent < 25) return require("../assets/images/iamge4.png");
   if (percent < 50) return require("../assets/images/iamge1.png");
@@ -45,7 +33,7 @@ const getGenieImage = (count) => {
 export default function QuestionPage() {
   const [questionText, setQuestionText] = useState("");
   const [sessionId, setSessionId] = useState("");
-  const [questionCount, setQuestionCount] = useState(0); // increments when backend sends question
+  const [questionCount, setQuestionCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [finalModal, setFinalModal] = useState(false);
@@ -54,16 +42,13 @@ export default function QuestionPage() {
 
   const { soundEnabled, setSoundEnabled } = useSound();
 
-  // Animations
   const scale = useRef(new Animated.Value(1)).current;
   const fade = useRef(new Animated.Value(1)).current;
   const rotate = useRef(new Animated.Value(0)).current;
 
-  // total expected questions (backend might send less/more) — used only for progress calculation & images
   const TOTAL_QUESTIONS = 15;
 
   useEffect(() => {
-    // breathing animation
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(scale, { toValue: 1.05, duration: 1500, useNativeDriver: true }),
@@ -72,22 +57,18 @@ export default function QuestionPage() {
     );
     loop.start();
 
-    // connect socket
     connectSocket();
 
-    // subscribe to socket messages
-    const unsub = subscribeSocket((msg: { data: string; }) => {
+    const unsub = subscribeSocket((msg) => {
       try {
         const payload = JSON.parse(msg.data);
         console.log("QUESTION RECEIVED:", payload);
 
         if (payload.type === "question") {
-          // set question text and session id
           setQuestionText(payload.question || "");
           if (payload.sessionId || payload.sessionid) {
             setSessionId(payload.sessionId || payload.sessionid);
           }
-          // increment count and progress
           setQuestionCount((prev) => {
             const next = prev + 1;
             setProgress(Math.round((next / TOTAL_QUESTIONS) * 100));
@@ -95,7 +76,6 @@ export default function QuestionPage() {
           });
           setLoading(false);
         } else if (payload.type === "final_guess" || payload.type === "final") {
-          // show final modal with backend guess
           setFinalGuess({
             guess: payload.guess || payload.name || "",
             confidence: payload.confidence,
@@ -103,10 +83,7 @@ export default function QuestionPage() {
           });
           setFinalModal(true);
         } else if (payload.type === "session_end") {
-          // backend indicated session ended — you can close socket or reset UI
           console.log("Session ended by backend");
-          // Keep final modal or reset depending on desired behaviour
-          // closeSocket(); // uncomment if you want to close socket after session
         }
       } catch (e) {
         console.log("ws message parse error", e);
@@ -114,10 +91,7 @@ export default function QuestionPage() {
     });
 
     return () => {
-      // cleanup subscription on unmount (does not close socket globally)
       unsub();
-      // optionally close socket if you want
-      // closeSocket();
     };
   }, []);
 
@@ -128,12 +102,9 @@ export default function QuestionPage() {
 
   const currentImage = getGenieImage(questionCount);
 
-  // send answer to backend using your required payload
-  // note: backend sample used "userID" + "sessionid" keys — we're sending userID (capital D) and sessionid lower-case
   const sendAnswer = (answer) => {
     setLoading(true);
 
-    // small shake + fade for button feedback
     Animated.sequence([
       Animated.timing(rotate, { toValue: 1, duration: 80, useNativeDriver: true }),
       Animated.timing(rotate, { toValue: -1, duration: 80, useNativeDriver: true }),
@@ -146,7 +117,7 @@ export default function QuestionPage() {
     if (ws && ws.readyState === WebSocket.OPEN) {
       const payload = {
         type: "answer",
-        userID: "12345", // TODO: replace with real user id
+        userID: "12345",
         answer: answer,
         sessionid: sessionId,
       };
@@ -157,25 +128,20 @@ export default function QuestionPage() {
       } catch (e) {
         console.log("send error", e);
       }
-    } else {
-      console.log("Socket not ready; answer queued locally or lost");
     }
 
-    // UI: show immediate transition to next (no mock questions)
     Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true }).start();
     setLoading(false);
   };
 
   return (
     <View style={styles.container}>
-      {/* BG */}
       <View style={styles.bgWrap}>
         <Image source={require("../assets/images/bg.png")} style={styles.bgImage} />
       </View>
 
       {/* HEADER */}
       <View style={styles.header}>
-        {/* SOUND BUTTON */}
         <TouchableOpacity onPress={() => setSoundEnabled(!soundEnabled)} style={styles.iconBtn}>
           <Image
             source={
@@ -187,7 +153,6 @@ export default function QuestionPage() {
           />
         </TouchableOpacity>
 
-        {/* HOME BUTTON */}
         <TouchableOpacity onPress={() => setExitConfirm(true)} style={styles.iconBtn}>
           <Image source={require("../assets/images/home.png")} style={styles.headerIcon} />
         </TouchableOpacity>
@@ -205,7 +170,7 @@ export default function QuestionPage() {
         </Animated.View>
       </View>
 
-      {/* BOTTOM SECTION (bubble + answers + progress) */}
+      {/* BOTTOM */}
       <View style={styles.bottomSection}>
         <ImageBackground
           source={require("../assets/images/bg-q.png")}
@@ -218,27 +183,19 @@ export default function QuestionPage() {
           <Text style={styles.questionText}>{questionText || (loading ? "Loading..." : "")}</Text>
         </ImageBackground>
 
-        {/* LOADING overlay (optional) */}
         {loading && (
           <View style={{ marginTop: 12 }}>
             <ActivityIndicator size="small" color="#fff" />
           </View>
         )}
 
-        {/* ANSWERS */}
         <View style={styles.optionsContainer}>
           <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.optionBtn}
-              onPress={() => sendAnswer("probably")}
-            >
+            <TouchableOpacity style={styles.optionBtn} onPress={() => sendAnswer("probably")}>
               <Text style={styles.optionTxt}>Probably</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.optionBtn}
-              onPress={() => sendAnswer("probably_not")}
-            >
+            <TouchableOpacity style={styles.optionBtn} onPress={() => sendAnswer("probably_not")}>
               <Text style={styles.optionTxt}>Probably Not</Text>
             </TouchableOpacity>
           </View>
@@ -254,7 +211,6 @@ export default function QuestionPage() {
           </View>
         </View>
 
-        {/* PROGRESS */}
         <View style={styles.progressContainer}>
           <View style={styles.progressBackground}>
             <Animated.View style={[styles.progressFill, { width: `${progress}%` }]}>
@@ -294,7 +250,7 @@ export default function QuestionPage() {
         </View>
       </Modal>
 
-      {/* FINAL GUESS MODAL (backend-driven) */}
+      {/* FINAL GUESS MODAL */}
       <Modal transparent visible={finalModal} animationType="fade">
         <View style={styles.modalBg}>
           <View style={styles.modalBox}>
@@ -302,7 +258,7 @@ export default function QuestionPage() {
             <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "700", color: "white" }}>
               {finalGuess?.guess || ""}
             </Text>
-            {/* Optionally show confidence */}
+
             {finalGuess?.confidence != null && (
               <Text style={{ marginTop: 8, color: "white" }}>
                 Confidence: {Math.round(finalGuess.confidence * 100)}%
@@ -320,13 +276,48 @@ export default function QuestionPage() {
                 <Text style={styles.yesText}>YES</Text>
               </TouchableOpacity>
 
+              {/* 🔥 FIXED PLAY AGAIN BUTTON */}
               <TouchableOpacity
                 style={styles.noBtn}
                 onPress={() => {
-                  setFinalModal(false);
-                  // send "play again" or reset session as you like
-                  // optional: send a restart message to backend
-                }}
+  setFinalModal(false);
+
+  // 🔥 FULL RESET UI
+  setQuestionCount(0);
+  setProgress(0);
+  setQuestionText("");
+  setSessionId("");
+  setLoading(true);
+
+  const ws = getSocket();
+
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    console.log("PLAY AGAIN → SENDING INIT");
+
+    ws.send(
+      JSON.stringify({
+        type: "init",
+        userID: "12345",
+      })
+    );
+  } else {
+    console.log("WS NOT READY — reconnecting…");
+    connectSocket();
+
+    setTimeout(() => {
+      const ws2 = getSocket();
+      if (ws2 && ws2.readyState === WebSocket.OPEN) {
+        ws2.send(
+          JSON.stringify({
+            type: "init",
+            userID: "12345",
+          })
+        );
+      }
+    }, 500);
+  }
+}}
+
               >
                 <Text style={styles.noText}>PLAY AGAIN</Text>
               </TouchableOpacity>
@@ -339,7 +330,7 @@ export default function QuestionPage() {
 }
 
 /* ---------------------------
-   STYLES (unchanged from your UI)
+   STYLES (UNCHANGED)
 ---------------------------- */
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", alignItems: "center" },
@@ -353,19 +344,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
   },
+
   bottomSection: {
     position: "absolute",
-    bottom: "10%", // 🔥 10% gap from bottom
+    bottom: "10%",
     width: "100%",
-
     alignItems: "center",
   },
+
   genieCenterContainer: {
     position: "absolute",
     top: "20%",
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
   },
 
   bgImage: { width: "100%", height: "100%", resizeMode: "cover" },
@@ -380,15 +371,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
 
-  iconBtn: {
-    padding: 6, // Makes touch area bigger
-  },
-
-  headerIcon: {
-    width: 32,
-    height: 32,
-    resizeMode: "contain",
-  },
+  iconBtn: { padding: 6 },
+  headerIcon: { width: 32, height: 32, resizeMode: "contain" },
 
   genieWrap: {
     width: width * 0.85,
@@ -396,25 +380,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
   },
-  genieImage: { width: 280, height: 360, resizeMode: "contain", alignItems: "center", justifyContent: "center" },
+
+  genieImage: { width: 280, height: 360, resizeMode: "contain" },
 
   progressContainer: { width: "100%", alignItems: "center", marginBottom: 6 },
+
   progressBackground: {
     width: "100%",
     height: 14,
     backgroundColor: "#ddd",
-
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
     overflow: "hidden",
   },
 
-  gradientFill: {
-    width: "100%",
-    height: "100%",
-  },
+  progressFill: { height: "100%" },
+
+  gradientFill: { width: "100%", height: "100%" },
 
   questionBubble: {
     width: "110%",
@@ -428,41 +408,42 @@ const styles = StyleSheet.create({
   },
 
   questionNumber: { fontSize: 14, color: "#666", marginBottom: 6 },
+
   questionText: { fontSize: 20, textAlign: "center", color: "white" },
 
   optionsContainer: { width: "100%", alignItems: "center" },
-  row: { flexDirection: "row", width: "100%", margin: 0, padding: 0 },
+
+  row: { flexDirection: "row", width: "100%" },
+
   optionBtn: {
     flex: 1,
-    width: "50%",
     backgroundColor: "#142131",
     paddingVertical: 14,
     alignItems: "center",
     borderWidth: 2,
     borderColor: "white",
-    padding: 0,
-    margin: 0,
   },
+
   optionTxt: { fontSize: 16, color: "white" },
 
-  modalBg: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "center", alignItems: "center" },
+  modalBg: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
   modalBox: {
     width: "75%",
     padding: 20,
-    backgroundColor: "rgba(20, 30, 50, 0.85)",
+    backgroundColor: "rgba(20,30,50,0.85)",
     borderRadius: 18,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
   },
 
-  modalTitle: {
-    fontSize: 16,
-    color: "white",
-    textAlign: "center",
-    lineHeight: 22,
-  },
+  modalTitle: { fontSize: 16, color: "white", textAlign: "center" },
 
   yesBtn: {
     flex: 1,
@@ -475,11 +456,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  yesText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-  },
+  yesText: { color: "white", fontSize: 16, fontWeight: "700" },
 
   noBtn: {
     flex: 1,
@@ -491,9 +468,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  noText: {
-    color: "#d1d1d1",
-    fontSize: 15,
-    fontWeight: "600",
-  },
+  noText: { color: "#d1d1d1", fontSize: 15, fontWeight: "600" },
 });

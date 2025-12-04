@@ -2,30 +2,30 @@
 import { Stack } from "expo-router";
 import React from "react";
 import { SoundProvider } from "./context/SoundContext";
-import { useFonts, Anton_400Regular } from "@expo-google-fonts/anton";
-import { ActivityIndicator, View } from "react-native";
+// import { useFonts, Anton_400Regular } from "@expo-google-fonts/anton";
+// import { ActivityIndicator, View } from "react-native";
 
 export default function Layout() {
   // Load Anton font
-  const [fontsLoaded] = useFonts({
-    Anton_400Regular,
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Anton_400Regular,
+  // });
 
   // Show loading screen while font loads
-  if (!fontsLoaded) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#000",
-        }}
-      >
-        <ActivityIndicator size="large" color="#fff" />
-      </View>
-    );
-  }
+  // if (!fontsLoaded) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         backgroundColor: "#000",
+  //       }}
+  //     >
+  //       <ActivityIndicator size="large" color="#fff" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <SoundProvider>

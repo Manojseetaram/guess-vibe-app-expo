@@ -1,125 +1,3 @@
-// import React, { useRef, useEffect } from "react";
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   Image,
-//   TouchableOpacity,
-//   Dimensions,
-// } from "react-native";
-// import { useRouter } from "expo-router";
-// import { Video, ResizeMode } from "expo-av";
-// import { useSound } from "./context/SoundContext";
-// import { connectSocket, getSocket } from "./utils/sockets";
-
-// const { width } = Dimensions.get("window");
-
-// export default function NextScreen() {
-//   const { soundEnabled, setSoundEnabled } = useSound();
-//   const flatListRef = useRef(null);
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     connectSocket(); // connect on screen open
-//   }, []);
-
-//   const handleStart = () => {
-//     const ws = getSocket();
-
-//     if (ws && ws.readyState === WebSocket.OPEN) {
-//       ws.send(
-//         JSON.stringify({
-//           type: "init",
-//           userID: "12345",
-//         })
-//       );
-//       console.log("Init Message Sent!");
-//     } else {
-//       console.log("Socket not ready!");
-//     }
-
-//     router.push("/question");
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Video
-//         source={require("../assets/video/Static_Video_Effects_Loop.mp4")}
-//         style={styles.video}
-//         resizeMode={ResizeMode.COVER}
-//         shouldPlay
-//         isLooping
-//         isMuted={false}
-//       />
-
-//       <View style={styles.overlay}>
-//         <View style={styles.header}>
-//           <TouchableOpacity onPress={() => setSoundEnabled(!soundEnabled)}>
-//             <Image
-//               source={
-//                 soundEnabled
-//                   ? require("../assets/images/volume.png")
-//                   : require("../assets/images/mute.png")
-//               }
-//               style={{ width: 32, height: 32 }}
-//             />
-//           </TouchableOpacity>
-
-//           <TouchableOpacity onPress={() => router.push("/profile")}>
-//             <Image
-//               source={require("../assets/images/user.png")}
-//               resizeMode="contain"
-//             />
-//           </TouchableOpacity>
-//         </View>
-
-//         <TouchableOpacity style={styles.startBtn} onPress={handleStart}>
-//           <Text style={styles.startText}>START</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: { flex: 1, backgroundColor: "#000" },
-
-//   video: {
-//     ...StyleSheet.absoluteFillObject,
-//     width: "100%",
-//     height: "100%",
-//     opacity: 0.8,
-//   },
-
-//   overlay: {
-//     flex: 1,
-//     alignItems: "center",
-//     paddingTop: 40,
-//   },
-
-//   header: {
-//     width: "90%",
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     marginBottom: 20,
-//   },
-
-//   startBtn: {
-//     position: "absolute",
-//     bottom: 60,
-//     borderColor: "rgba(255,255,255,0.15)",
-//     borderWidth: 1,
-//     paddingVertical: 12,
-//     paddingHorizontal: 50,
-//     borderRadius: 10,
-//   },
-
-//   startText: {
-//     fontSize: 20,
-//     fontFamily: "Rajdhani_700Bold",
-//     color: "#fff",
-//   },
-// });
 import React, { useRef, useEffect } from "react";
 import {
   View,
@@ -133,12 +11,12 @@ import { Video, ResizeMode } from "expo-av";
 import { useSound } from "./context/SoundContext";
 
 import { connectSocket, getSocket } from "./utils/sockets";
+import { wp, hp } from "./utils/responsive";
 
 export default function NextScreen() {
   const { soundEnabled, setSoundEnabled } = useSound();
   const router = useRouter();
 
-  // CONNECT WEBSOCKET
   useEffect(() => {
     connectSocket();
   }, []);
@@ -172,7 +50,7 @@ export default function NextScreen() {
       />
 
       <View style={styles.overlay}>
-        {/* Header */}
+        {/* HEADER */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => setSoundEnabled(!soundEnabled)}>
             <Image
@@ -181,7 +59,7 @@ export default function NextScreen() {
                   ? require("../assets/images/volume.png")
                   : require("../assets/images/mute.png")
               }
-              style={{ width: 32, height: 32 }}
+              style={styles.headerIcon}
             />
           </TouchableOpacity>
 
@@ -189,6 +67,7 @@ export default function NextScreen() {
             <Image
               source={require("../assets/images/user.png")}
               resizeMode="contain"
+              style={styles.profileIcon}
             />
           </TouchableOpacity>
         </View>
@@ -203,7 +82,10 @@ export default function NextScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000" },
+  container: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
 
   video: {
     ...StyleSheet.absoluteFillObject,
@@ -212,23 +94,46 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  overlay: { flex: 1, alignItems: "center", paddingTop: 40 },
+  overlay: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: hp(6),
+  },
 
+  /* ---------- HEADER ---------- */
   header: {
-    width: "90%",
+    width: wp(90),
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: hp(3),
   },
 
+  headerIcon: {
+    width: wp(8),
+    height: wp(8),
+  },
+
+  profileIcon: {
+    width: wp(9),
+    height: wp(9),
+  },
+
+  /* ---------- START BUTTON ---------- */
   startBtn: {
     position: "absolute",
-    bottom: 60,
-    borderColor: "rgba(255,255,255,0.15)",
+    bottom: hp(10),
+    paddingVertical: hp(1.4),
+    paddingHorizontal: wp(15),
+    borderRadius: wp(3),
     borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    borderRadius: 10,
+    borderColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
-  startText: { fontSize: 20, fontWeight: "bold", color: "#fff" },
+
+  startText: {
+    fontSize: hp(2.6),
+    fontWeight: "bold",
+    color: "#fff",
+  },
 });
+``
