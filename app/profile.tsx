@@ -12,7 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 
-const API_URL = "https://sixthsense-production.up.railway.app/";  
+const API_URL = "https://sixthsense-production.up.railway.app";  
 
 export default function Profile() {
   

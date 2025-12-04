@@ -21,7 +21,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
 
   
-  const API_BASE_URL = "https://sixthsense-production.up.railway.app/";
+  const API_BASE_URL = "https://sixthsense-production.up.railway.app";
 
   // Pick Profile Image
   const pickImage = async () => {

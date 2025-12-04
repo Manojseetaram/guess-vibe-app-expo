@@ -2,11 +2,11 @@
   "expo": {
     "extra": {
       "eas": {
-        "projectId": "6962fb5e-2dde-4589-8c7d-e2031b257b92"
+        "projectId": "bb0538e6-2aef-41b8-a577-582fd8af3130"
       }
     },
     "android": {
-      "package": "com.rustcult.guessgame"
+      "package": "com.manojrustcult.guessgame"
     }
   }
 }
