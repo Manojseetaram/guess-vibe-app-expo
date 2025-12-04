@@ -28,10 +28,10 @@ type FinalGuessType = {
 const getGenieImage = (count: number) => {
   const QUESTIONS_TOTAL = 15;
   const percent = (count / QUESTIONS_TOTAL) * 100;
-  if (percent < 25) return require("../assets/images/iamge4.png");
-  if (percent < 50) return require("../assets/images/iamge1.png");
+  if (percent < 25) return require("../assets/images/iamge1.png");
+  if (percent < 50) return require("../assets/images/iamge2.png");
   if (percent < 75) return require("../assets/images/iamge3.png");
-  return require("../assets/images/iamge2.png");
+  return require("../assets/images/iamge4.png");
 };
 const sendInitSafely = (payload: any, retries = 12) => {
   let ws = getSocket();
@@ -491,5 +491,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  noText: { color: "#d1d1d1", fontSize: 15, fontWeight: "600" },
+  noText: { color: "#d1d1d1", fontSize: 13, fontWeight: "600" },
 });

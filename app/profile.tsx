@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 const API_URL = "https://sixthsense-production.up.railway.app/";  
 
 export default function Profile() {
+  
   const router = useRouter();
   const [photo, setPhoto] = useState<string | null >(null);
   const [email, setEmail] = useState("");
