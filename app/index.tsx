@@ -132,13 +132,13 @@ const styles = StyleSheet.create({
   bigText: {
     color: "white",
     fontSize: hp(2.8),
-    fontWeight: "800",
+    fontWeight: "600",
     fontFamily: "Anton_400Regular",
   },
 
   smallText: {
     color: "white",
-    fontSize: hp(1.8),
+    fontSize: hp(1.5),
     marginTop: hp(0.5),
   },
 

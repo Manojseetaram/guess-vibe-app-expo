@@ -34,8 +34,10 @@ export default function NextScreen() {
 
       console.log("INIT SENT");
     }
-
-    router.push("/question");
+     setTimeout(() => {
+       router.push("/question");
+     }, 1000);
+   
   };
 
   return (
