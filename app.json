@@ -3,15 +3,27 @@
     "name": "VI-SENSE",
     "slug": "guess-game",
     "icon": "./assets/images/logo.png",
+    "backgroundColor" : "#ffffff",
+
+    "splash": {
+      "image": "./assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+
+    "android": {
+      "package": "com.manojrustcult.guessgame",
+      "splash": {
+        "image": "./assets/images/logo.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
+      }
+    },
 
     "extra": {
       "eas": {
         "projectId": "bb0538e6-2aef-41b8-a577-582fd8af3130"
       }
-    },
-
-    "android": {
-      "package": "com.manojrustcult.guessgame"
     }
   }
 }

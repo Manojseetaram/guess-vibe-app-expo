@@ -22,21 +22,39 @@ export default function NextScreen() {
   }, []);
 
   const handleStart = () => {
-    const ws = getSocket();
+   const ws = getSocket();
 
-    if (ws && ws.readyState === WebSocket.OPEN) {
+if (ws) {
+  if (ws.readyState === WebSocket.OPEN) {
+    setTimeout(() => {
       ws.send(
         JSON.stringify({
           type: "init",
           userID: "12345",
         })
       );
+      console.log("INIT SENT (delayed)");
+    }, 300);
+  } else {
+    ws.onopen = () => {
+      setTimeout(() => {
+        ws.send(
+          JSON.stringify({
+            type: "init",
+            userID: "12345",
+          })
+        );
+        console.log("INIT SENT AFTER ONOPEN");
+      }, 300);
+    };
+  }
+}
 
-      console.log("INIT SENT");
-    }
-     setTimeout(() => {
-       router.push("/question");
-     }, 1000);
+// Move to question screen AFTER sending init
+setTimeout(() => {
+  router.push("/question");
+}, 600);
+
    
   };
 
